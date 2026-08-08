@@ -13,10 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         /* ================================================================
-           KeyBox · 最终部署版
-           背景色：苹果原生深色/浅色
-           锁屏：纯数字键盘 · 无阴影图标
-           品牌色统一：#1A3A5C
+           KeyBox · 品牌色统一版 · 锁屏图标已替换
            ================================================================ */
 
         :root {
@@ -138,7 +135,7 @@
             box-shadow: 0 0 12px var(--red-glow), 0 0 24px var(--red-glow);
         }
 
-        /* ===== 锁屏（无阴影图标 + 纯数字键盘） ===== */
+        /* ===== 锁屏 ===== */
         .lock-screen {
             flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 20px 16px 60px; gap: 16px; min-height: 320px; position: relative;
@@ -148,13 +145,21 @@
             background: var(--bg-card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border: 1px solid var(--border-glow);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: none; /* 移除阴影 */
-            margin-bottom: 8px;
+            box-shadow: none; margin-bottom: 8px;
         }
         .lock-icon-wrapper .lock-icon {
             width: 40px; height: 40px; opacity: .85; color: var(--text-secondary);
         }
-        .lock-icon-wrapper .lock-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        /* ★★★ 已替换为用户提供的 SVG 图标 ★★★ */
+        .lock-icon-wrapper .lock-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
         .lock-screen .lock-title { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
         .lock-screen .lock-hint { font-size: 13px; color: var(--text-tertiary); margin-top: -4px; }
         .lock-input-group { display: flex; gap: 10px; width: 100%; max-width: 340px; margin-top: 8px; }
@@ -163,9 +168,7 @@
             border: 1px solid var(--border-subtle); background: var(--bg-input); color: var(--text-primary);
             font-size: 16px; font-family: inherit; outline: none; transition: border .25s, background .25s, box-shadow .25s;
             backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            /* ★★★ 纯数字键盘 ★★★ */
-            inputmode: numeric;
-            pattern: [0-9]*;
+            inputmode: numeric; pattern: [0-9]*;
         }
         .lock-input-group input:focus { border-color: var(--brand); background: var(--bg-input-focus); box-shadow: 0 0 0 4px var(--brand-soft); }
         .lock-input-group input::placeholder { color: var(--text-tertiary); font-weight: 400; }
@@ -194,9 +197,8 @@
         /* ===== 工具栏 ===== */
         .toolbar {
             display: flex; gap: 8px; align-items: center; flex-shrink: 0;
-            padding: 8px 16px 8px 16px; background: var(--bg-base); transition: background .4s;
-            position: sticky; top: 0; z-index: 10; min-height: 56px;
-            flex-wrap: wrap;
+            padding: 8px 16px 6px 16px; background: var(--bg-base); transition: background .4s;
+            position: sticky; top: 0; z-index: 10; min-height: 52px; flex-wrap: wrap;
         }
         .toolbar .search-wrap { flex: 1; position: relative; min-width: 120px; }
         .toolbar .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); pointer-events: none; }
@@ -209,9 +211,9 @@
         .toolbar .search-wrap input:focus { border-color: var(--brand); background: var(--bg-input-focus); box-shadow: 0 0 0 3px var(--brand-soft); }
         .toolbar .search-wrap input::placeholder { color: var(--text-tertiary); }
 
-        .toolbar .btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+        .toolbar .btn-group { display: flex; gap: 4px; flex-shrink: 0; align-items: center; }
         .toolbar .btn-group .btn-icon {
-            width: 38px; height: 38px; border-radius: var(--radius-full); border: none;
+            width: 36px; height: 36px; border-radius: var(--radius-full); border: none;
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: transform .2s, box-shadow .2s, background .2s; flex-shrink: 0;
         }
@@ -225,8 +227,8 @@
         .toolbar .btn-group .btn-lock:hover { background: var(--brand-light); }
         .toolbar .btn-group .btn-view {
             background: var(--bg-card); color: var(--text-secondary);
-            border: 1px solid var(--border-subtle); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-            width: 38px; height: 38px; border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle); backdrop-filter: blur(10px);
+            width: 36px; height: 36px; border-radius: var(--radius-full);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: transform .2s, background .2s, color .2s; flex-shrink: 0;
         }
@@ -259,7 +261,6 @@
         .entry-list-wrap { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 0 16px 12px 16px; }
 
         .entry-list.card-view { display: flex; flex-direction: column; gap: 6px; padding-bottom: 4px; }
-
         .entry-list.table-view { display: flex; flex-direction: column; gap: 0; padding-bottom: 4px; }
         .entry-list.table-view .entry-card {
             border-radius: 0; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle);
@@ -269,33 +270,28 @@
         }
         .entry-list.table-view .entry-card::before { display: none; }
         .entry-list.table-view .entry-card:active { transform: scale(.98); background: var(--bg-card-hover); }
-        .entry-list.table-view .entry-card .card-top { display: none; }
-        .entry-list.table-view .entry-card .card-body { display: none !important; }
-        .entry-list.table-view .entry-card .card-preview { display: none; }
-        .entry-list.table-view .entry-card .table-title { font-size: 14px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .entry-list.table-view .entry-card .table-account { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .entry-list.table-view .entry-card .table-category { font-size: 10px; padding: 2px 8px; border-radius: var(--radius-full); background: var(--brand-soft); color: var(--brand-light); white-space: nowrap; max-width: 60px; overflow: hidden; text-overflow: ellipsis; }
-        .entry-list.table-view .entry-card .table-actions { display: flex; gap: 2px; justify-content: flex-end; }
-        .entry-list.table-view .entry-card .table-actions button {
+        .entry-list.table-view .entry-card .card-actions { display: flex; gap: 2px; justify-content: flex-end; }
+        .entry-list.table-view .entry-card .card-actions button {
             width: 28px; height: 28px; border-radius: var(--radius-full); border: none;
             background: transparent; color: var(--text-tertiary); cursor: pointer;
             display: flex; align-items: center; justify-content: center;
             transition: background .2s, color .2s, transform .15s;
         }
-        .entry-list.table-view .entry-card .table-actions button:active { transform: scale(.80); }
-        .entry-list.table-view .entry-card .table-actions button:hover { background: var(--bg-card-hover); color: var(--text-secondary); }
-        .entry-list.table-view .entry-card .table-actions button svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .entry-list.table-view .entry-card .card-actions button:active { transform: scale(.80); }
+        .entry-list.table-view .entry-card .card-actions button:hover { background: var(--bg-card-hover); color: var(--text-secondary); }
+        .entry-list.table-view .entry-card .card-actions button svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
         .entry-list.table-view .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 0; color: var(--text-tertiary); }
 
         /* ===== 密码卡片 ===== */
         .entry-card {
             background: var(--bg-card); backdrop-filter: blur(var(--blur-amount)); -webkit-backdrop-filter: blur(var(--blur-amount));
-            border: 1px solid var(--border-glow); border-radius: var(--radius-md);
-            padding: 14px 18px 12px; box-shadow: var(--shadow-card);
-            transition: background .25s, transform .2s, border-color .3s; cursor: pointer; position: relative; overflow: hidden;
+            border: 1px solid var(--border-glow); border-radius: var(--radius-lg);
+            padding: 16px 20px 14px; box-shadow: var(--shadow-card);
+            transition: background .25s, transform .2s, border-color .3s;
+            cursor: pointer; position: relative; overflow: hidden;
         }
         .entry-card::before {
-            content: ''; position: absolute; left: 0; top: 10px; bottom: 10px;
+            content: ''; position: absolute; left: 0; top: 12px; bottom: 12px;
             width: 4px; border-radius: 0 4px 4px 0;
             background: linear-gradient(180deg, var(--card-accent), var(--card-accent-light));
             opacity: .85; transition: opacity .3s;
@@ -500,22 +496,15 @@
             flex-shrink: 0;
         }
         .modal-card .custom-field-row .cf-lock-btn:active,
-        .modal-card .custom-field-row .cf-remove:active {
-            transform: scale(.88);
-        }
+        .modal-card .custom-field-row .cf-remove:active { transform: scale(.88); }
         .modal-card .custom-field-row .cf-lock-btn.encrypted {
-            color: var(--brand);
-            border-color: var(--brand);
-            background: var(--brand-soft);
+            color: var(--brand); border-color: var(--brand); background: var(--brand-soft);
         }
         .modal-card .custom-field-row .cf-remove:hover {
-            color: var(--red);
-            border-color: var(--red);
-            background: var(--red-soft);
+            color: var(--red); border-color: var(--red); background: var(--red-soft);
         }
         .modal-card .custom-field-row .cf-remove svg {
-            width: 16px; height: 16px;
-            stroke: currentColor; fill: none;
+            width: 16px; height: 16px; stroke: currentColor; fill: none;
             stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
         }
 
@@ -524,9 +513,8 @@
             display: flex; align-items: center; gap: 4px;
         }
         .modal-card .custom-hint svg {
-            width: 12px; height: 12px;
-            stroke: var(--brand);
-            fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+            width: 12px; height: 12px; stroke: var(--brand); fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
         }
 
         .modal-card .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
@@ -568,25 +556,18 @@
             .header { padding: calc(var(--safe-top) + 4px) 12px 4px 12px; min-height: 56px; }
             .header-title { font-size: 22px; }
             .status-dot { width: 9px; height: 9px; }
-            .toolbar { padding: 6px 12px 6px 12px; min-height: 48px; gap: 6px; }
+            .toolbar { padding: 6px 12px 4px 12px; min-height: 44px; gap: 6px; }
             .toolbar .search-wrap input { padding: 6px 12px 6px 32px; font-size: 12px; }
-            .toolbar .btn-group .btn-icon { width: 34px; height: 34px; }
+            .toolbar .btn-group .btn-icon { width: 32px; height: 32px; }
             .toolbar .btn-group .btn-icon svg { width: 16px; height: 16px; }
-            .toolbar .btn-group .btn-view { width: 34px; height: 34px; }
+            .toolbar .btn-group .btn-view { width: 32px; height: 32px; }
             .toolbar .btn-group .btn-view svg { width: 16px; height: 16px; }
             .category-bar { padding: 0 12px 6px 12px; gap: 4px; }
             .category-bar .cat-tab { font-size: 11px; padding: 3px 10px; }
             .entry-list-wrap { padding: 0 12px 8px 12px; }
-            .entry-card { padding: 12px 14px 10px; }
-            .entry-card .card-title { font-size: 14px; }
-            .entry-card .field-row { font-size: 12px; }
-            .entry-card .card-preview { font-size: 11px; }
-            .entry-list.table-view .entry-card { padding: 8px 10px; grid-template-columns: 1fr 1fr 0.5fr 0.5fr; gap: 4px; }
-            .entry-list.table-view .entry-card .table-title { font-size: 12px; }
-            .entry-list.table-view .entry-card .table-account { font-size: 11px; }
-            .entry-list.table-view .entry-card .table-category { font-size: 9px; padding: 1px 6px; max-width: 40px; }
-            .entry-list.table-view .entry-card .table-actions button { width: 24px; height: 24px; }
-            .entry-list.table-view .entry-card .table-actions button svg { width: 12px; height: 12px; }
+            .entry-card { padding: 14px 16px 12px; }
+            .entry-card .card-title { font-size: 15px; }
+            .entry-card .card-sub { font-size: 12px; }
             .lock-icon-wrapper { width: 72px; height: 72px; }
             .lock-icon-wrapper .lock-icon { width: 32px; height: 32px; }
             .lock-screen .lock-title { font-size: 18px; }
@@ -629,9 +610,10 @@
         <div class="lock-screen" id="lockScreen">
             <div class="lock-icon-wrapper">
                 <div class="lock-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    <!-- ★★★ 用户提供的 SVG 图标（已适配颜色） ★★★ -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.2084 11.0932C14.9388 11.0932 15.531 10.5035 15.531 9.77597C15.531 9.04848 14.9388 8.45874 14.2084 8.45874C13.4779 8.45874 12.8857 9.04848 12.8857 9.77597C12.8857 10.5035 13.4779 11.0932 14.2084 11.0932Z" fill="none" stroke="currentColor" />
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.46447 3.46447C2 4.92893 2 7.28595 2 12C2 16.714 2 19.0711 3.46447 20.5355C4.92893 22 7.28595 22 12 22C16.714 22 19.0711 22 20.5355 20.5355C22 19.0711 22 16.714 22 12C22 7.28595 22 4.92893 20.5355 3.46447C19.0711 2 16.714 2 12 2C7.28595 2 4.92893 2 3.46447 3.46447ZM14.2084 13.5521C16.3025 13.5521 18 11.8615 18 9.77606C18 7.6906 16.3025 6 14.2084 6C12.1144 6 10.4169 7.6906 10.4169 9.77606C10.4169 10.742 10.8578 11.4446 10.8578 11.4446L6.27264 16.011C6.0669 16.2159 5.77886 16.7486 6.27264 17.2404L6.8017 17.7673C7.00743 17.9429 7.52471 18.1888 7.94796 17.7673L8.56519 17.1526C9.18242 17.7673 9.88782 17.416 10.1523 17.0647C10.5932 16.45 10.0642 15.8353 10.0642 15.8353L10.2405 15.6597C11.087 16.5027 11.8277 16.011 12.0922 15.6597C12.5331 15.045 12.0922 14.4303 12.0922 14.4303C12.0403 14.3269 11.9731 14.2539 11.9153 14.1912C11.777 14.041 11.693 13.9498 12.004 13.64L12.5331 13.113C12.9564 13.4643 13.8264 13.5521 14.2084 13.5521Z" fill="none" stroke="currentColor" />
                     </svg>
                 </div>
             </div>
@@ -688,34 +670,19 @@
 
         <!-- 长按菜单 -->
         <div class="longpress-menu" id="longpressMenu">
-            <button class="menu-item" data-action="copy-account">
-                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                复制账号
-            </button>
-            <button class="menu-item" data-action="copy-password">
-                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                复制密码
-            </button>
-            <button class="menu-item" data-action="edit">
-                <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                编辑
-            </button>
-            <button class="menu-item danger" data-action="delete">
-                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-                删除
-            </button>
+            <button class="menu-item" data-action="copy-account"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>复制账号</button>
+            <button class="menu-item" data-action="copy-password"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>复制密码</button>
+            <button class="menu-item" data-action="edit"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>编辑</button>
+            <button class="menu-item danger" data-action="delete"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>删除</button>
         </div>
 
+        <!-- 模态框 -->
         <div class="modal-overlay" id="modalOverlay">
             <div class="modal-card">
-                <div class="modal-icon" id="modalIcon">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                </div>
+                <div class="modal-icon" id="modalIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
                 <h3 id="modalTitle">提示</h3>
                 <div class="modal-message" id="modalMessage">消息内容</div>
-                <div class="modal-actions" id="modalActions">
-                    <button class="btn-primary btn-alone" id="modalConfirmBtn">确定</button>
-                </div>
+                <div class="modal-actions" id="modalActions"><button class="btn-primary btn-alone" id="modalConfirmBtn">确定</button></div>
             </div>
         </div>
 
@@ -723,54 +690,23 @@
             <div class="modal-card edit-card">
                 <div class="modal-header">
                     <h3 id="editModalTitle">新建密码</h3>
-                    <button class="modal-close" id="editModalClose">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                    </button>
+                    <button class="modal-close" id="editModalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                 </div>
-                <div class="form-group">
-                    <label>标题 <span style="color:var(--red);">*</span></label>
-                    <input type="text" id="fTitle" placeholder="网站 / 应用名称" maxlength="40" />
-                </div>
-                <div class="form-group">
-                    <label>用户名</label>
-                    <input type="text" id="fUsername" placeholder="账号 / 邮箱" maxlength="60" />
-                </div>
-                <div class="form-group">
-                    <label>密码</label>
-                    <input type="password" id="fPassword" placeholder="密码" maxlength="120" />
-                </div>
-                <div class="form-group">
-                    <label>备注</label>
-                    <textarea id="fNote" placeholder="其他说明…" maxlength="200"></textarea>
-                </div>
+                <div class="form-group"><label>标题 <span style="color:var(--red);">*</span></label><input type="text" id="fTitle" placeholder="网站 / 应用名称" maxlength="40" /></div>
+                <div class="form-group"><label>用户名</label><input type="text" id="fUsername" placeholder="账号 / 邮箱" maxlength="60" /></div>
+                <div class="form-group"><label>密码</label><input type="password" id="fPassword" placeholder="密码" maxlength="120" /></div>
+                <div class="form-group"><label>备注</label><textarea id="fNote" placeholder="其他说明…" maxlength="200"></textarea></div>
                 <div class="custom-section">
-                    <div class="section-label">
-                        <span>自定义字段</span>
-                        <button id="addCustomBtn">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                            添加
-                        </button>
-                    </div>
+                    <div class="section-label"><span>自定义字段</span><button id="addCustomBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>添加</button></div>
                     <div id="customFieldsContainer"></div>
-                    <div class="custom-hint">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0110 0v4"/>
-                        </svg>
-                        点击锁图标可加密该字段
-                    </div>
+                    <div class="custom-hint"><svg viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>点击锁图标可加密该字段</div>
                 </div>
-                <div class="modal-actions">
-                    <button class="btn-cancel" id="editCancelBtn">取消</button>
-                    <button class="btn-save" id="editSaveBtn">保存</button>
-                </div>
+                <div class="modal-actions"><button class="btn-cancel" id="editCancelBtn">取消</button><button class="btn-save" id="editSaveBtn">保存</button></div>
             </div>
         </div>
 
         <div class="toast" id="toast"></div>
-        <div class="check-pop" id="checkPop">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
+        <div class="check-pop" id="checkPop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
 
     </div>
 
@@ -799,41 +735,24 @@
 
             const $ = id => document.getElementById(id);
             const dom = {
-                lockScreen: $('lockScreen'),
-                mainScreen: $('mainScreen'),
-                masterInput: $('masterInput'),
-                unlockBtn: $('unlockBtn'),
-                lockTitle: $('lockTitle'),
-                lockHint: $('lockHint'),
-                lockFooter: $('lockFooter'),
-                forgotBtn: $('forgotBtn'),
+                lockScreen: $('lockScreen'), mainScreen: $('mainScreen'),
+                masterInput: $('masterInput'), unlockBtn: $('unlockBtn'),
+                lockTitle: $('lockTitle'), lockHint: $('lockHint'),
+                lockFooter: $('lockFooter'), forgotBtn: $('forgotBtn'),
                 statusDot: $('statusDot'),
-                searchInput: $('searchInput'),
-                entryList: $('entryList'),
-                categoryBar: $('categoryBar'),
-                viewToggleBtn: $('viewToggleBtn'),
-                addBtn: $('addBtn'),
-                lockBtn: $('lockBtn'),
-                editModal: $('editModal'),
-                editModalClose: $('editModalClose'),
-                editCancelBtn: $('editCancelBtn'),
-                editSaveBtn: $('editSaveBtn'),
+                searchInput: $('searchInput'), entryList: $('entryList'),
+                categoryBar: $('categoryBar'), viewToggleBtn: $('viewToggleBtn'),
+                addBtn: $('addBtn'), lockBtn: $('lockBtn'),
+                editModal: $('editModal'), editModalClose: $('editModalClose'),
+                editCancelBtn: $('editCancelBtn'), editSaveBtn: $('editSaveBtn'),
                 editModalTitle: $('editModalTitle'),
-                fTitle: $('fTitle'),
-                fUsername: $('fUsername'),
-                fPassword: $('fPassword'),
-                fNote: $('fNote'),
-                customFieldsContainer: $('customFieldsContainer'),
-                addCustomBtn: $('addCustomBtn'),
-                modalOverlay: $('modalOverlay'),
-                modalIcon: $('modalIcon'),
-                modalTitle: $('modalTitle'),
-                modalMessage: $('modalMessage'),
-                modalActions: $('modalActions'),
-                modalConfirmBtn: $('modalConfirmBtn'),
+                fTitle: $('fTitle'), fUsername: $('fUsername'), fPassword: $('fPassword'), fNote: $('fNote'),
+                customFieldsContainer: $('customFieldsContainer'), addCustomBtn: $('addCustomBtn'),
+                modalOverlay: $('modalOverlay'), modalIcon: $('modalIcon'),
+                modalTitle: $('modalTitle'), modalMessage: $('modalMessage'),
+                modalActions: $('modalActions'), modalConfirmBtn: $('modalConfirmBtn'),
                 longpressMenu: $('longpressMenu'),
-                toast: $('toast'),
-                checkPop: $('checkPop'),
+                toast: $('toast'), checkPop: $('checkPop'),
             };
 
             // ================================================================
@@ -875,8 +794,7 @@
             function showAlert(title, message) {
                 return showModal(
                     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
-                    title || '提示',
-                    message || '',
+                    title || '提示', message || '',
                     [{ text: '确定', cls: 'btn-primary btn-alone' }]
                 );
             }
@@ -892,12 +810,10 @@
                     `;
                     dom.modalOverlay.classList.add('active');
                     document.getElementById('modalConfirmCancel').addEventListener('click', () => {
-                        dom.modalOverlay.classList.remove('active');
-                        resolve(false);
+                        dom.modalOverlay.classList.remove('active'); resolve(false);
                     });
                     document.getElementById('modalConfirmOk').addEventListener('click', () => {
-                        dom.modalOverlay.classList.remove('active');
-                        resolve(true);
+                        dom.modalOverlay.classList.remove('active'); resolve(true);
                     });
                 });
             }
@@ -913,35 +829,13 @@
                 el._timer = setTimeout(() => el.classList.remove('show'), duration);
             }
 
-            function escapeHtml(text) {
-                if (!text) return '';
-                const d = document.createElement('div');
-                d.textContent = text;
-                return d.innerHTML;
-            }
+            function escapeHtml(text) { if (!text) return ''; const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
 
             function pad(n) { return String(n).padStart(2, '0'); }
-
-            function formatDate(d) {
-                const y = d.getFullYear(),
-                    m = d.getMonth() + 1,
-                    day = d.getDate();
-                return y + '-' + pad(m) + '-' + pad(day);
-            }
-
-            function genId() {
-                return Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
-            }
-
-            function haptic(style = 'light') {
-                if (navigator.vibrate) {
-                    navigator.vibrate(style === 'light' ? 8 : 20);
-                }
-            }
-
-            function getFieldId(entryId, index) {
-                return entryId + '_cf_' + index;
-            }
+            function formatDate(d) { const y = d.getFullYear(), m = d.getMonth() + 1, day = d.getDate(); return y + '-' + pad(m) + '-' + pad(day); }
+            function genId() { return Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8); }
+            function haptic(style = 'light') { if (navigator.vibrate) { navigator.vibrate(style === 'light' ? 8 : 20); } }
+            function getFieldId(entryId, index) { return entryId + '_cf_' + index; }
 
             function getEntryCategory(entry) {
                 if (!entry.customFields) return null;
@@ -960,38 +854,18 @@
                 return Array.from(cats);
             }
 
-            const THEME_COLORS = [
-                '#912130', '#002FA7', '#C8655A', '#6B4B3E', '#4A4A4A',
-                '#1D7874', '#3A2C4F', '#1D4E89', '#2D6A4F', '#C85A17'
-            ];
-
+            const THEME_COLORS = ['#912130','#002FA7','#C8655A','#6B4B3E','#4A4A4A','#1D7874','#3A2C4F','#1D4E89','#2D6A4F','#C85A17'];
             function getCardAccentColor(id) {
                 let hash = 0;
-                for (let i = 0; i < id.length; i++) {
-                    hash = id.charCodeAt(i) + ((hash << 5) - hash);
-                }
+                for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
                 const idx = Math.abs(hash) % THEME_COLORS.length;
                 return THEME_COLORS[idx];
             }
-
             function getCardAccentLight(id) {
                 let hash = 0;
-                for (let i = 0; i < id.length; i++) {
-                    hash = id.charCodeAt(i) + ((hash << 5) - hash);
-                }
+                for (let i = 0; i < id.length; i++) hash = id.charCodeAt(i) + ((hash << 5) - hash);
                 const idx = Math.abs(hash) % THEME_COLORS.length;
-                const lightMap = {
-                    '#912130': '#d95662',
-                    '#002FA7': '#4a7fc5',
-                    '#C8655A': '#e69d8c',
-                    '#6B4B3E': '#b68b7e',
-                    '#4A4A4A': '#8e8e93',
-                    '#1D7874': '#4ecdc4',
-                    '#3A2C4F': '#8b6bb3',
-                    '#1D4E89': '#4a7fb5',
-                    '#2D6A4F': '#52b788',
-                    '#C85A17': '#e67e22'
-                };
+                const lightMap = {'#912130':'#d95662','#002FA7':'#4a7fc5','#C8655A':'#e69d8c','#6B4B3E':'#b68b7e','#4A4A4A':'#8e8e93','#1D7874':'#4ecdc4','#3A2C4F':'#8b6bb3','#1D4E89':'#4a7fb5','#2D6A4F':'#52b788','#C85A17':'#e67e22'};
                 return lightMap[THEME_COLORS[idx]] || THEME_COLORS[idx];
             }
 
@@ -1000,17 +874,9 @@
             // ================================================================
             async function deriveKey(password, salt) {
                 const enc = new TextEncoder();
-                const keyMaterial = await crypto.subtle.importKey(
-                    'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
-                );
-                return crypto.subtle.deriveKey({
-                    name: 'PBKDF2',
-                    salt: salt,
-                    iterations: 120000,
-                    hash: 'SHA-256'
-                }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+                const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+                return crypto.subtle.deriveKey({ name: 'PBKDF2', salt: salt, iterations: 120000, hash: 'SHA-256' }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
             }
-
             async function encryptData(key, data) {
                 const enc = new TextEncoder();
                 const encoded = enc.encode(JSON.stringify(data));
@@ -1021,7 +887,6 @@
                 result.set(new Uint8Array(ciphertext), iv.length);
                 return result;
             }
-
             async function decryptData(key, encrypted) {
                 const iv = encrypted.slice(0, 12);
                 const ciphertext = encrypted.slice(12);
@@ -1029,11 +894,8 @@
                     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
                     const dec = new TextDecoder();
                     return JSON.parse(dec.decode(decrypted));
-                } catch (_) {
-                    return null;
-                }
+                } catch (_) { return null; }
             }
-
             async function encryptFieldValue(key, value) {
                 if (!key || !value) return value;
                 const enc = new TextEncoder();
@@ -1045,7 +907,6 @@
                 combined.set(new Uint8Array(ciphertext), iv.length);
                 return btoa(String.fromCharCode(...combined));
             }
-
             async function decryptFieldValue(key, base64) {
                 if (!key || !base64) return '';
                 try {
@@ -1054,42 +915,21 @@
                     const data = combined.slice(12);
                     const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
                     return new TextDecoder().decode(decrypted);
-                } catch (_) {
-                    return '[解密失败]';
-                }
+                } catch (_) { return '[解密失败]'; }
             }
 
             function loadSaltFromStore() {
                 const raw = localStorage.getItem(STORAGE_SALT);
                 if (!raw) return null;
-                try {
-                    const binary = atob(raw);
-                    const bytes = new Uint8Array(binary.length);
-                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                    return bytes;
-                } catch (_) { return null; }
+                try { const binary = atob(raw); const bytes = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i); return bytes; } catch (_) { return null; }
             }
-
-            function saveSaltToStore(salt) {
-                const base64 = btoa(String.fromCharCode(...salt));
-                localStorage.setItem(STORAGE_SALT, base64);
-            }
-
+            function saveSaltToStore(salt) { const base64 = btoa(String.fromCharCode(...salt)); localStorage.setItem(STORAGE_SALT, base64); }
             function loadEncryptedFromStore() {
                 const raw = localStorage.getItem(STORAGE_ENTRIES);
                 if (!raw) return null;
-                try {
-                    const binary = atob(raw);
-                    const bytes = new Uint8Array(binary.length);
-                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                    return bytes;
-                } catch (_) { return null; }
+                try { const binary = atob(raw); const bytes = new Uint8Array(binary.length); for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i); return bytes; } catch (_) { return null; }
             }
-
-            function saveEncryptedToStore(encrypted) {
-                const base64 = btoa(String.fromCharCode(...encrypted));
-                localStorage.setItem(STORAGE_ENTRIES, base64);
-            }
+            function saveEncryptedToStore(encrypted) { const base64 = btoa(String.fromCharCode(...encrypted)); localStorage.setItem(STORAGE_ENTRIES, base64); }
 
             // ================================================================
             //  重置数据
@@ -1104,10 +944,7 @@
                 isUnlocked = false;
                 passwordVisible = {};
                 cfVisible = {};
-                cardExpanded = {};
-                showAlert('已重置', '所有数据已清除，页面将刷新，你可以重新设置主密码。').then(() => {
-                    location.reload(true);
-                });
+                showAlert('已重置', '所有数据已清除，页面将刷新，你可以重新设置主密码。').then(() => { location.reload(true); });
             }
 
             // ================================================================
@@ -1115,7 +952,6 @@
             // ================================================================
             async function unlock(password) {
                 const loadedSalt = loadSaltFromStore();
-
                 if (!loadedSalt) {
                     const newSalt = crypto.getRandomValues(new Uint8Array(16));
                     saveSaltToStore(newSalt);
@@ -1140,7 +976,6 @@
                 try {
                     const key = await deriveKey(password, salt);
                     const encrypted = loadEncryptedFromStore();
-
                     if (!encrypted) {
                         const emptyData = { entries: [], nextId: 1 };
                         const newEncrypted = await encryptData(key, emptyData);
@@ -1156,14 +991,11 @@
                         await showAlert('已初始化', '数据已初始化完成。');
                         return true;
                     }
-
                     const data = await decryptData(key, encrypted);
-
                     if (data === null) {
                         await showAlert('密码错误', '主密码不正确，请重新输入。<br />如果忘记主密码，请点击底部「忘记主密码？重置数据」。');
                         return false;
                     }
-
                     masterKey = key;
                     entries = data.entries || [];
                     nextId = data.nextId || 1;
@@ -1173,7 +1005,6 @@
                     updateStatus(true);
                     renderAll();
                     return true;
-
                 } catch (e) {
                     console.error(e);
                     await showAlert('解锁失败', '解密过程发生错误，请重试。');
@@ -1181,9 +1012,6 @@
                 }
             }
 
-            // ================================================================
-            //  锁定
-            // ================================================================
             function lock() {
                 if (!isUnlocked) return;
                 isUnlocked = false;
@@ -1199,9 +1027,6 @@
                 haptic('medium');
             }
 
-            // ================================================================
-            //  保存数据
-            // ================================================================
             async function saveEntries() {
                 if (!isUnlocked || !masterKey) return;
                 const data = { entries, nextId };
@@ -1215,11 +1040,8 @@
 
             function updateStatus(unlocked) {
                 const dot = dom.statusDot;
-                if (unlocked) {
-                    dot.className = 'status-dot unlocked';
-                } else {
-                    dot.className = 'status-dot locked';
-                }
+                if (unlocked) dot.className = 'status-dot unlocked';
+                else dot.className = 'status-dot locked';
             }
 
             // ================================================================
@@ -1228,10 +1050,7 @@
             function deleteEntry(id) {
                 entries = entries.filter(e => e.id !== id);
                 delete passwordVisible[id];
-                delete cardExpanded[id];
-                Object.keys(cfVisible).forEach(key => {
-                    if (key.startsWith(id + '_cf_')) delete cfVisible[key];
-                });
+                Object.keys(cfVisible).forEach(key => { if (key.startsWith(id + '_cf_')) delete cfVisible[key]; });
                 saveEntries();
                 renderAll();
                 showToast('已删除');
@@ -1249,9 +1068,7 @@
                         let searchStr = (e.title + ' ' + e.username + ' ' + e.note).toLowerCase();
                         if (e.customFields) {
                             e.customFields.forEach(cf => {
-                                if (!cf.encrypted) {
-                                    searchStr += ' ' + (cf.key + ' ' + cf.value).toLowerCase();
-                                }
+                                if (!cf.encrypted) searchStr += ' ' + (cf.key + ' ' + cf.value).toLowerCase();
                             });
                         }
                         return searchStr.includes(q);
@@ -1274,11 +1091,8 @@
                     tab.textContent = cat;
                     tab.dataset.cat = cat;
                     tab.addEventListener('click', () => {
-                        if (currentCategory === cat) {
-                            currentCategory = null;
-                        } else {
-                            currentCategory = cat;
-                        }
+                        if (currentCategory === cat) currentCategory = null;
+                        else currentCategory = cat;
                         renderCategoryBar();
                         renderList();
                     });
@@ -1286,10 +1100,7 @@
                 });
             }
 
-            function renderAll() {
-                renderCategoryBar();
-                renderList();
-            }
+            function renderAll() { renderCategoryBar(); renderList(); }
 
             function renderList() {
                 const container = dom.entryList;
@@ -1297,54 +1108,20 @@
 
                 if (entries.length === 0) {
                     container.className = 'entry-list ' + (currentView === 'card' ? 'card-view' : 'table-view');
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-illustration">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                                    <path d="M7 11V7a5 5 0 0110 0v4"/>
-                                </svg>
-                            </div>
-                            <div class="main">还没有密码</div>
-                            <div class="sub">点击下方按钮添加第一条</div>
-                            <button class="empty-action" id="emptyAddBtn">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                                添加密码
-                            </button>
-                        </div>
-                    `;
+                    container.innerHTML = `<div class="empty-state"><div class="empty-illustration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div><div class="main">还没有密码</div><div class="sub">点击下方按钮添加第一条</div><button class="empty-action" id="emptyAddBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>添加密码</button></div>`;
                     const emptyBtn = document.getElementById('emptyAddBtn');
-                    if (emptyBtn) {
-                        emptyBtn.addEventListener('click', () => {
-                            if (!isUnlocked) { showAlert('请先解锁', '请先解锁才能添加密码。'); return; }
-                            openEdit(null);
-                        });
-                    }
+                    if (emptyBtn) emptyBtn.addEventListener('click', () => { if (!isUnlocked) { showAlert('请先解锁', '请先解锁才能添加密码。'); return; } openEdit(null); });
                     return;
                 }
 
                 if (filtered.length === 0) {
                     container.className = 'entry-list ' + (currentView === 'card' ? 'card-view' : 'table-view');
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-illustration">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8"/>
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                                </svg>
-                            </div>
-                            <div class="main">没有匹配的结果</div>
-                            <div class="sub">试试其他关键词</div>
-                        </div>
-                    `;
+                    container.innerHTML = `<div class="empty-state"><div class="empty-illustration"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><div class="main">没有匹配的结果</div><div class="sub">试试其他关键词</div></div>`;
                     return;
                 }
 
-                if (currentView === 'card') {
-                    renderCardView(container, filtered);
-                } else {
-                    renderTableView(container, filtered);
-                }
+                if (currentView === 'card') renderCardView(container, filtered);
+                else renderTableView(container, filtered);
             }
 
             function renderCardView(container, filtered) {
@@ -1520,14 +1297,7 @@
                             }
                         }, 500);
                     };
-                    const endPress = () => {
-                        isPressed = false;
-                        clearTimeout(timer);
-                        timer = null;
-                        if (isLongpressTriggered) {
-                            isLongpressTriggered = false;
-                        }
-                    };
+                    const endPress = () => { isPressed = false; clearTimeout(timer); timer = null; if (isLongpressTriggered) isLongpressTriggered = false; };
                     card.addEventListener('touchstart', startPress, { passive: true });
                     card.addEventListener('touchend', endPress, { passive: true });
                     card.addEventListener('touchmove', endPress, { passive: true });
@@ -1536,46 +1306,15 @@
                     card.addEventListener('mouseleave', endPress);
 
                     const editBtn = card.querySelector('.edit-btn');
-                    if (editBtn) {
-                        editBtn.addEventListener('click', e => {
-                            e.stopPropagation();
-                            const id = editBtn.dataset.id;
-                            openEdit(id);
-                        });
-                    }
-
+                    if (editBtn) editBtn.addEventListener('click', e => { e.stopPropagation(); const id = editBtn.dataset.id; openEdit(id); });
                     const delBtn = card.querySelector('.delete-btn');
-                    if (delBtn) {
-                        delBtn.addEventListener('click', e => {
-                            e.stopPropagation();
-                            const id = delBtn.dataset.id;
-                            confirmDelete(id);
-                        });
-                    }
-
+                    if (delBtn) delBtn.addEventListener('click', e => { e.stopPropagation(); const id = delBtn.dataset.id; confirmDelete(id); });
                     card.querySelectorAll('.copy-btn').forEach(btn => {
-                        btn.addEventListener('click', e => {
-                            e.stopPropagation();
-                            const text = btn.dataset.copy;
-                            if (text) {
-                                copyToClipboard(text);
-                                showToast('已复制');
-                                haptic('light');
-                            }
-                        });
+                        btn.addEventListener('click', e => { e.stopPropagation(); const text = btn.dataset.copy; if (text) { copyToClipboard(text); showToast('已复制'); haptic('light'); } });
                     });
-
                     card.querySelectorAll('.toggle-pwd').forEach(btn => {
-                        btn.addEventListener('click', e => {
-                            e.stopPropagation();
-                            const id = btn.dataset.id;
-                            if (id) {
-                                passwordVisible[id] = !passwordVisible[id];
-                                renderList();
-                            }
-                        });
+                        btn.addEventListener('click', e => { e.stopPropagation(); const id = btn.dataset.id; if (id) { passwordVisible[id] = !passwordVisible[id]; renderList(); } });
                     });
-
                     card.querySelectorAll('.toggle-cf').forEach(btn => {
                         btn.addEventListener('click', async e => {
                             e.stopPropagation();
@@ -1608,24 +1347,10 @@
                         const id = card.dataset.id;
                         openEdit(id);
                     });
-
                     const editBtn = card.querySelector('.edit-btn');
-                    if (editBtn) {
-                        editBtn.addEventListener('click', e => {
-                            e.stopPropagation();
-                            const id = editBtn.dataset.id;
-                            openEdit(id);
-                        });
-                    }
-
+                    if (editBtn) editBtn.addEventListener('click', e => { e.stopPropagation(); const id = editBtn.dataset.id; openEdit(id); });
                     const delBtn = card.querySelector('.delete-btn');
-                    if (delBtn) {
-                        delBtn.addEventListener('click', e => {
-                            e.stopPropagation();
-                            const id = delBtn.dataset.id;
-                            confirmDelete(id);
-                        });
-                    }
+                    if (delBtn) delBtn.addEventListener('click', e => { e.stopPropagation(); const id = delBtn.dataset.id; confirmDelete(id); });
                 });
             }
 
@@ -1641,60 +1366,23 @@
                         const entry = entries.find(e => e.id === id);
                         if (!entry) return;
                         switch (action) {
-                            case 'copy-account':
-                                if (entry.username) {
-                                    copyToClipboard(entry.username);
-                                    showToast('账号已复制');
-                                    haptic('light');
-                                } else {
-                                    showToast('没有账号可复制');
-                                }
-                                break;
-                            case 'copy-password':
-                                if (entry.password) {
-                                    copyToClipboard(entry.password);
-                                    showToast('密码已复制');
-                                    haptic('light');
-                                } else {
-                                    showToast('没有密码可复制');
-                                }
-                                break;
-                            case 'edit':
-                                openEdit(id);
-                                break;
-                            case 'delete':
-                                confirmDelete(id);
-                                break;
-                            default:
-                                break;
+                            case 'copy-account': if (entry.username) { copyToClipboard(entry.username); showToast('账号已复制'); haptic('light'); } else { showToast('没有账号可复制'); } break;
+                            case 'copy-password': if (entry.password) { copyToClipboard(entry.password); showToast('密码已复制'); haptic('light'); } else { showToast('没有密码可复制'); } break;
+                            case 'edit': openEdit(id); break;
+                            case 'delete': confirmDelete(id); break;
+                            default: break;
                         }
                     });
                 });
             }
 
-            document.addEventListener('click', () => {
-                dom.longpressMenu.style.display = 'none';
-            });
-            document.addEventListener('touchstart', () => {
-                dom.longpressMenu.style.display = 'none';
-            });
+            document.addEventListener('click', () => { dom.longpressMenu.style.display = 'none'; });
+            document.addEventListener('touchstart', () => { dom.longpressMenu.style.display = 'none'; });
 
             function copyToClipboard(text) {
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
-                } else {
-                    fallbackCopy(text);
-                }
+                if (navigator.clipboard) { navigator.clipboard.writeText(text).catch(() => fallbackCopy(text)); } else { fallbackCopy(text); }
             }
-
-            function fallbackCopy(text) {
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-            }
+            function fallbackCopy(text) { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
 
             // ================================================================
             //  CRUD
@@ -1705,20 +1393,9 @@
                     if (cf.encrypted && cf.value && masterKey) {
                         const encrypted = await encryptFieldValue(masterKey, cf.value);
                         processedFields.push({ key: cf.key, value: encrypted, encrypted: true });
-                    } else {
-                        processedFields.push({ key: cf.key, value: cf.value, encrypted: false });
-                    }
+                    } else { processedFields.push({ key: cf.key, value: cf.value, encrypted: false }); }
                 }
-
-                const entry = {
-                    id: genId(),
-                    title: title.trim(),
-                    username: username.trim(),
-                    password: password,
-                    note: note.trim(),
-                    customFields: processedFields,
-                    createdAt: formatDate(new Date()),
-                };
+                const entry = { id: genId(), title: title.trim(), username: username.trim(), password: password, note: note.trim(), customFields: processedFields, createdAt: formatDate(new Date()) };
                 entries.push(entry);
                 await saveEntries();
                 renderAll();
@@ -1729,25 +1406,14 @@
             async function updateEntry(id, title, username, password, note, customFields) {
                 const idx = entries.findIndex(e => e.id === id);
                 if (idx === -1) return;
-
                 const processedFields = [];
                 for (const cf of customFields) {
                     if (cf.encrypted && cf.value && masterKey) {
                         const encrypted = await encryptFieldValue(masterKey, cf.value);
                         processedFields.push({ key: cf.key, value: encrypted, encrypted: true });
-                    } else {
-                        processedFields.push({ key: cf.key, value: cf.value, encrypted: false });
-                    }
+                    } else { processedFields.push({ key: cf.key, value: cf.value, encrypted: false }); }
                 }
-
-                entries[idx] = {
-                    ...entries[idx],
-                    title: title.trim(),
-                    username: username.trim(),
-                    password: password,
-                    note: note.trim(),
-                    customFields: processedFields,
-                };
+                entries[idx] = { ...entries[idx], title: title.trim(), username: username.trim(), password: password, note: note.trim(), customFields: processedFields };
                 await saveEntries();
                 renderAll();
                 showToast('已更新');
@@ -1784,9 +1450,7 @@
                     lockBtn.classList.toggle('encrypted', next);
                     lockBtn.querySelector('i').className = next ? 'fas fa-lock' : 'fas fa-unlock';
                 });
-                row.querySelector('.cf-remove').addEventListener('click', () => {
-                    row.remove();
-                });
+                row.querySelector('.cf-remove').addEventListener('click', () => { row.remove(); });
                 container.appendChild(row);
                 return row;
             }
@@ -1797,10 +1461,7 @@
                 for (const row of rows) {
                     const keyInput = row.querySelector('.cf-key-input');
                     const valInput = row.querySelector('.cf-value-input');
-                    if (keyInput.value.trim() === '' && valInput.value.trim() === '') {
-                        keyInput.focus();
-                        return;
-                    }
+                    if (keyInput.value.trim() === '' && valInput.value.trim() === '') { keyInput.focus(); return; }
                 }
                 const newRow = addCustomFieldRow('', '', false);
                 const keyInput = newRow.querySelector('.cf-key-input');
@@ -1814,9 +1475,7 @@
                     const key = row.querySelector('.cf-key-input').value.trim();
                     const value = row.querySelector('.cf-value-input').value.trim();
                     const encrypted = row.querySelector('.cf-lock-btn').dataset.encrypted === 'true';
-                    if (key) {
-                        fields.push({ key, value, encrypted });
-                    }
+                    if (key) fields.push({ key, value, encrypted });
                 });
                 return fields;
             }
@@ -1828,60 +1487,38 @@
                 if (!isUnlocked) { await showAlert('请先解锁', '请先解锁才能编辑或添加密码。'); return; }
                 const isEdit = !!id;
                 const entry = isEdit ? entries.find(e => e.id === id) : null;
-
                 dom.editModalTitle.textContent = isEdit ? '编辑密码' : '新建密码';
                 editingId = isEdit ? id : null;
-
                 dom.fTitle.value = entry ? entry.title : '';
                 dom.fUsername.value = entry ? entry.username : '';
                 dom.fPassword.value = entry ? entry.password : '';
                 dom.fNote.value = entry ? entry.note : '';
-
                 dom.customFieldsContainer.innerHTML = '';
                 const fields = entry ? (entry.customFields || []) : [];
                 for (const cf of fields) {
                     let displayValue = cf.value || '';
-                    if (cf.encrypted && cf.value && masterKey) {
-                        displayValue = await decryptFieldValue(masterKey, cf.value);
-                    }
+                    if (cf.encrypted && cf.value && masterKey) displayValue = await decryptFieldValue(masterKey, cf.value);
                     addCustomFieldRow(cf.key, displayValue, cf.encrypted || false);
                 }
-
                 dom.editModal.classList.add('active');
-                setTimeout(() => {
-                    dom.fTitle.focus();
-                    dom.fTitle.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }, 350);
+                setTimeout(() => { dom.fTitle.focus(); dom.fTitle.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 350);
                 haptic('light');
             }
 
             function closeEdit() {
                 dom.editModal.classList.remove('active');
-                dom.fTitle.value = '';
-                dom.fUsername.value = '';
-                dom.fPassword.value = '';
-                dom.fNote.value = '';
-                dom.customFieldsContainer.innerHTML = '';
+                dom.fTitle.value = ''; dom.fUsername.value = ''; dom.fPassword.value = ''; dom.fNote.value = ''; dom.customFieldsContainer.innerHTML = '';
                 editingId = null;
             }
 
             async function handleSave() {
                 const title = dom.fTitle.value.trim();
-                if (!title) {
-                    await showAlert('请输入标题', '标题是必填项，请填写后重试。');
-                    dom.fTitle.focus();
-                    return;
-                }
+                if (!title) { await showAlert('请输入标题', '标题是必填项，请填写后重试。'); dom.fTitle.focus(); return; }
                 const username = dom.fUsername.value.trim();
                 const password = dom.fPassword.value;
                 const note = dom.fNote.value.trim();
                 const customFields = collectCustomFields();
-
-                if (editingId) {
-                    await updateEntry(editingId, title, username, password, note, customFields);
-                } else {
-                    await addEntry(title, username, password, note, customFields);
-                }
+                if (editingId) { await updateEntry(editingId, title, username, password, note, customFields); } else { await addEntry(title, username, password, note, customFields); }
                 closeEdit();
             }
 
@@ -1891,15 +1528,8 @@
             async function confirmDelete(id) {
                 const entry = entries.find(e => e.id === id);
                 if (!entry) return;
-                const ok = await showDangerConfirm(
-                    '确认删除',
-                    `确定要删除「${escapeHtml(entry.title)}」吗？<br />此操作不可恢复。`,
-                    '删除',
-                    '取消'
-                );
-                if (ok) {
-                    deleteEntry(id);
-                }
+                const ok = await showDangerConfirm('确认删除', `确定要删除「${escapeHtml(entry.title)}」吗？<br />此操作不可恢复。`, '删除', '取消');
+                if (ok) deleteEntry(id);
             }
 
             // ================================================================
@@ -1908,39 +1538,20 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     if (dom.editModal.classList.contains('active')) closeEdit();
-                    if (dom.modalOverlay.classList.contains('active')) dom.modalOverlay.classList.remove(
-                    'active');
+                    if (dom.modalOverlay.classList.contains('active')) dom.modalOverlay.classList.remove('active');
                     dom.longpressMenu.style.display = 'none';
                 }
-                if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-                    e.preventDefault();
-                    if (isUnlocked) lock();
-                }
+                if (e.ctrlKey && e.shiftKey && e.key === 'L') { e.preventDefault(); if (isUnlocked) lock(); }
             });
 
             // ================================================================
-            //  ★★★ Service Worker 注册（带排查） ★★★
+            //  Service Worker
             // ================================================================
             function registerSW() {
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.register('./sw.js')
-                        .then(reg => {
-                            console.log('✅ Service Worker 注册成功:', reg);
-                            // 监听更新
-                            reg.addEventListener('updatefound', () => {
-                                const newWorker = reg.installing;
-                                newWorker.addEventListener('statechange', () => {
-                                    if (newWorker.state === 'activated') {
-                                        console.log('✅ SW 已激活');
-                                    }
-                                });
-                            });
-                        })
-                        .catch(err => {
-                            console.warn('⚠️ Service Worker 注册失败:', err);
-                        });
-                } else {
-                    console.warn('⚠️ 当前浏览器不支持 Service Worker');
+                        .then(reg => { console.log('✅ Service Worker 注册成功:', reg); })
+                        .catch(err => { console.warn('⚠️ Service Worker 注册失败:', err); });
                 }
             }
 
@@ -1949,104 +1560,51 @@
             // ================================================================
             function init() {
                 const hasSalt = loadSaltFromStore() !== null;
-                if (hasSalt) {
-                    dom.lockTitle.textContent = '请输入密码';
-                    dom.lockHint.textContent = '输入你之前设置的密码';
-                } else {
-                    dom.lockTitle.textContent = '首次使用，设置密码';
-                    dom.lockHint.textContent = '请牢记（至少 6 位数字）';
-                }
+                if (hasSalt) { dom.lockTitle.textContent = '请输入密码'; dom.lockHint.textContent = '输入你之前设置的密码'; }
+                else { dom.lockTitle.textContent = '首次使用，设置密码'; dom.lockHint.textContent = '请牢记（至少 6 位数字）'; }
                 dom.lockScreen.style.display = 'flex';
                 dom.mainScreen.classList.remove('active');
                 dom.masterInput.focus();
 
-                dom.viewToggleBtn.addEventListener('click', () => {
-                    currentView = (currentView === 'card' ? 'table' : 'card');
-                    renderList();
-                });
+                dom.viewToggleBtn.addEventListener('click', () => { currentView = (currentView === 'card' ? 'table' : 'card'); renderList(); });
 
                 dom.forgotBtn.addEventListener('click', async function(e) {
-                    e.stopPropagation();
-                    haptic('light');
-
+                    e.stopPropagation(); haptic('light');
                     const hasSalt = loadSaltFromStore() !== null;
                     const hasData = loadEncryptedFromStore() !== null;
-
-                    if (!hasSalt && !hasData) {
-                        await showAlert('无需重置', '当前没有存储任何数据，无需重置。<br />直接设置新主密码即可。');
-                        return;
-                    }
-
-                    const ok = await showDangerConfirm(
-                        '重置所有数据',
-                        '此操作将 <strong>永久删除</strong> 所有已保存的密码数据，包括所有条目和自定义字段。<br /><br />' +
-                        '重置后你可以重新设置主密码。<br /><span style="color:var(--red);">此操作不可恢复！</span>',
-                        '确认重置',
-                        '取消'
-                    );
-                    if (ok) {
-                        resetAllData();
-                    }
+                    if (!hasSalt && !hasData) { await showAlert('无需重置', '当前没有存储任何数据，无需重置。<br />直接设置新主密码即可。'); return; }
+                    const ok = await showDangerConfirm('重置所有数据', '此操作将 <strong>永久删除</strong> 所有已保存的密码数据，包括所有条目和自定义字段。<br /><br />重置后你可以重新设置主密码。<br /><span style="color:var(--red);">此操作不可恢复！</span>', '确认重置', '取消');
+                    if (ok) resetAllData();
                 });
 
                 dom.unlockBtn.addEventListener('click', () => {
                     const pwd = dom.masterInput.value;
-                    if (pwd.length < 6) {
-                        showAlert('密码太短', '主密码至少 6 位，请重新输入。');
-                        return;
-                    }
+                    if (pwd.length < 6) { showAlert('密码太短', '主密码至少 6 位，请重新输入。'); return; }
                     unlock(pwd);
                 });
-                dom.masterInput.addEventListener('keydown', e => {
-                    if (e.key === 'Enter') dom.unlockBtn.click();
-                });
+                dom.masterInput.addEventListener('keydown', e => { if (e.key === 'Enter') dom.unlockBtn.click(); });
 
-                dom.addBtn.addEventListener('click', () => {
-                    if (!isUnlocked) { showAlert('请先解锁', '请先解锁才能添加密码。'); return; }
-                    openEdit(null);
-                });
-
-                dom.lockBtn.addEventListener('click', () => {
-                    if (isUnlocked) lock();
-                });
+                dom.addBtn.addEventListener('click', () => { if (!isUnlocked) { showAlert('请先解锁', '请先解锁才能添加密码。'); return; } openEdit(null); });
+                dom.lockBtn.addEventListener('click', () => { if (isUnlocked) lock(); });
 
                 dom.editModalClose.addEventListener('click', closeEdit);
                 dom.editCancelBtn.addEventListener('click', closeEdit);
-                dom.editModal.addEventListener('click', e => {
-                    if (e.target === dom.editModal) closeEdit();
-                });
+                dom.editModal.addEventListener('click', e => { if (e.target === dom.editModal) closeEdit(); });
                 dom.editSaveBtn.addEventListener('click', handleSave);
-                dom.fTitle.addEventListener('keydown', e => {
-                    if (e.key === 'Enter') dom.fUsername.focus();
-                });
-                dom.fUsername.addEventListener('keydown', e => {
-                    if (e.key === 'Enter') dom.fPassword.focus();
-                });
-                dom.fPassword.addEventListener('keydown', e => {
-                    if (e.key === 'Enter') dom.fNote.focus();
-                });
-                dom.fNote.addEventListener('keydown', e => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        dom.editSaveBtn.click();
-                    }
-                });
+                dom.fTitle.addEventListener('keydown', e => { if (e.key === 'Enter') dom.fUsername.focus(); });
+                dom.fUsername.addEventListener('keydown', e => { if (e.key === 'Enter') dom.fPassword.focus(); });
+                dom.fPassword.addEventListener('keydown', e => { if (e.key === 'Enter') dom.fNote.focus(); });
+                dom.fNote.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dom.editSaveBtn.click(); } });
 
                 dom.addCustomBtn.addEventListener('click', handleAddCustomField);
-
                 dom.searchInput.addEventListener('input', renderAll);
 
-                // ★★★ 注册 Service Worker ★★★
                 registerSW();
-
-                console.log('KeyBox · 部署版已加载 (SW 已注册)');
+                console.log('KeyBox · 品牌色统一版已加载（锁屏图标已替换）');
             }
 
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+            else init();
 
             window.__KEYBOX = { lock, unlock, resetAllData };
 
