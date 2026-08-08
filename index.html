@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>KeyBox</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="KeyBox" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="apple-touch-icon" href="icon-1024.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        /* ================================================================
+           KeyBox · 最终部署版
+           背景色：苹果原生深色/浅色
+           锁屏：纯数字键盘 · 无阴影图标
+           品牌色统一：#1A3A5C
+           ================================================================ */
+
+        :root {
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --radius-xs: 8px;
+            --radius-full: 9999px;
+
+            --bg-base: #000000;
+            --bg-card: rgba(255, 255, 255, 0.08);
+            --bg-card-hover: rgba(255, 255, 255, 0.14);
+            --bg-input: rgba(255, 255, 255, 0.06);
+            --bg-input-focus: rgba(255, 255, 255, 0.12);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(255, 255, 255, 0.14);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+            --shadow-modal: 0 24px 64px rgba(0, 0, 0, 0.55);
+
+            --text-primary: #f0f2f5;
+            --text-secondary: rgba(255, 255, 255, 0.60);
+            --text-tertiary: rgba(255, 255, 255, 0.34);
+
+            --brand: #1A3A5C;
+            --brand-light: #2A5A8C;
+            --brand-soft: rgba(26, 58, 92, 0.25);
+            --brand-glow: rgba(26, 58, 92, 0.35);
+
+            --green: #5BCFA0;
+            --green-glow: rgba(91, 207, 160, 0.4);
+            --red: #F07A7A;
+            --red-glow: rgba(240, 122, 122, 0.4);
+
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 16px);
+
+            --font: -apple-system, 'SF Pro Display', 'PingFang SC', 'Helvetica Neue', sans-serif;
+            --transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            --blur-amount: 30px;
+        }
+
+        .theme-color-0 { --card-accent: #912130; --card-accent-light: #d95662; }
+        .theme-color-1 { --card-accent: #002FA7; --card-accent-light: #4a7fc5; }
+        .theme-color-2 { --card-accent: #C8655A; --card-accent-light: #e69d8c; }
+        .theme-color-3 { --card-accent: #6B4B3E; --card-accent-light: #b68b7e; }
+        .theme-color-4 { --card-accent: #4A4A4A; --card-accent-light: #8e8e93; }
+        .theme-color-5 { --card-accent: #1D7874; --card-accent-light: #4ecdc4; }
+        .theme-color-6 { --card-accent: #3A2C4F; --card-accent-light: #8b6bb3; }
+        .theme-color-7 { --card-accent: #1D4E89; --card-accent-light: #4a7fb5; }
+        .theme-color-8 { --card-accent: #2D6A4F; --card-accent-light: #52b788; }
+        .theme-color-9 { --card-accent: #C85A17; --card-accent-light: #e67e22; }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --bg-base: #f2f2f7;
+                --bg-card: rgba(255, 255, 255, 0.72);
+                --bg-card-hover: rgba(255, 255, 255, 0.88);
+                --bg-input: rgba(0, 0, 0, 0.04);
+                --bg-input-focus: rgba(0, 0, 0, 0.08);
+                --border-subtle: rgba(0, 0, 0, 0.06);
+                --border-glow: rgba(0, 0, 0, 0.08);
+                --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+                --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.15);
+                --text-primary: #1a1a2e;
+                --text-secondary: rgba(0, 0, 0, 0.55);
+                --text-tertiary: rgba(0, 0, 0, 0.32);
+                --brand-soft: rgba(26, 58, 92, 0.10);
+                --brand-glow: rgba(26, 58, 92, 0.15);
+                --green-glow: rgba(42, 157, 143, 0.3);
+                --red-glow: rgba(230, 57, 70, 0.3);
+            }
+            .theme-color-0 { --card-accent: #c0392b; --card-accent-light: #e74c3c; }
+            .theme-color-1 { --card-accent: #1a3a8a; --card-accent-light: #4a7fc5; }
+            .theme-color-2 { --card-accent: #b85a4f; --card-accent-light: #d9887a; }
+            .theme-color-3 { --card-accent: #5a3f35; --card-accent-light: #9a7a6e; }
+            .theme-color-4 { --card-accent: #3a3a3a; --card-accent-light: #7a7a7a; }
+            .theme-color-5 { --card-accent: #1a6a66; --card-accent-light: #3ab0a8; }
+            .theme-color-6 { --card-accent: #2a1f3f; --card-accent-light: #7a5aa0; }
+            .theme-color-7 { --card-accent: #1a3f6a; --card-accent-light: #4a7fb5; }
+            .theme-color-8 { --card-accent: #1a5a3f; --card-accent-light: #3aa87a; }
+            .theme-color-9 { --card-accent: #b85a17; --card-accent-light: #d97a22; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html { height: 100%; font-family: var(--font); background: var(--bg-base); transition: background .4s; }
+        body {
+            min-height: 100vh; background: var(--bg-base); color: var(--text-primary);
+            display: flex; justify-content: center; padding: 0; overflow: hidden;
+            -webkit-font-smoothing: antialiased; transition: background .4s; overscroll-behavior: none; height: 100%;
+        }
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--brand-light); border-radius: 10px; }
+
+        .app {
+            max-width: 440px; width: 100%; display: flex; flex-direction: column;
+            height: 100vh; height: 100dvh; padding: 0 0 var(--safe-bottom) 0;
+            position: relative; overflow: hidden; background: var(--bg-base); transition: background .4s;
+        }
+
+        /* ===== 头部 ===== */
+        .header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: calc(var(--safe-top) + 6px) 16px 6px 16px; flex-shrink: 0;
+            background: var(--bg-base); transition: background .4s; z-index: 20; min-height: 64px;
+        }
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .header-title { font-size: 26px; font-weight: 700; letter-spacing: -.03em; color: var(--brand); cursor: default; transition: color .3s; }
+        .status-dot {
+            display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+            background: var(--red); transition: background .3s, box-shadow .3s; flex-shrink: 0;
+        }
+        .status-dot.unlocked {
+            background: var(--green);
+            box-shadow: 0 0 12px var(--green-glow), 0 0 24px var(--green-glow);
+        }
+        .status-dot.locked {
+            background: var(--red);
+            box-shadow: 0 0 12px var(--red-glow), 0 0 24px var(--red-glow);
+        }
+
+        /* ===== 锁屏（无阴影图标 + 纯数字键盘） ===== */
+        .lock-screen {
+            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px 16px 60px; gap: 16px; min-height: 320px; position: relative;
+        }
+        .lock-icon-wrapper {
+            width: 88px; height: 88px; border-radius: 50%;
+            background: var(--bg-card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border-glow);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: none; /* 移除阴影 */
+            margin-bottom: 8px;
+        }
+        .lock-icon-wrapper .lock-icon {
+            width: 40px; height: 40px; opacity: .85; color: var(--text-secondary);
+        }
+        .lock-icon-wrapper .lock-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+        .lock-screen .lock-title { font-size: 20px; font-weight: 600; letter-spacing: -.02em; }
+        .lock-screen .lock-hint { font-size: 13px; color: var(--text-tertiary); margin-top: -4px; }
+        .lock-input-group { display: flex; gap: 10px; width: 100%; max-width: 340px; margin-top: 8px; }
+        .lock-input-group input {
+            flex: 1; padding: 14px 18px; border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle); background: var(--bg-input); color: var(--text-primary);
+            font-size: 16px; font-family: inherit; outline: none; transition: border .25s, background .25s, box-shadow .25s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            /* ★★★ 纯数字键盘 ★★★ */
+            inputmode: numeric;
+            pattern: [0-9]*;
+        }
+        .lock-input-group input:focus { border-color: var(--brand); background: var(--bg-input-focus); box-shadow: 0 0 0 4px var(--brand-soft); }
+        .lock-input-group input::placeholder { color: var(--text-tertiary); font-weight: 400; }
+        .lock-input-group button {
+            padding: 14px 28px; border-radius: var(--radius-full); border: none;
+            background: var(--brand); color: #fff; font-weight: 600; font-size: 15px;
+            font-family: inherit; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s;
+            box-shadow: 0 4px 20px var(--brand-soft); white-space: nowrap;
+        }
+        .lock-input-group button:active { transform: scale(.94); }
+        .lock-input-group button:hover { background: var(--brand-light); }
+
+        .lock-footer { position: absolute; bottom: 30px; left: 0; right: 0; text-align: center; padding: 0 20px; }
+        .lock-footer .forgot-link {
+            background: none; border: none; color: var(--text-tertiary); font-size: 13px; font-weight: 400;
+            font-family: inherit; cursor: pointer; padding: 8px 16px; border-radius: var(--radius-full);
+            transition: color .25s, background .25s; letter-spacing: .3px; opacity: .45;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .lock-footer .forgot-link:active { opacity: 1; background: var(--bg-card-hover); }
+
+        /* ===== 主界面 ===== */
+        .main-screen { display: none; flex: 1; flex-direction: column; overflow: hidden; min-height: 0; }
+        .main-screen.active { display: flex; }
+
+        /* ===== 工具栏 ===== */
+        .toolbar {
+            display: flex; gap: 8px; align-items: center; flex-shrink: 0;
+            padding: 8px 16px 8px 16px; background: var(--bg-base); transition: background .4s;
+            position: sticky; top: 0; z-index: 10; min-height: 56px;
+            flex-wrap: wrap;
+        }
+        .toolbar .search-wrap { flex: 1; position: relative; min-width: 120px; }
+        .toolbar .search-wrap svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); pointer-events: none; }
+        .toolbar .search-wrap input {
+            width: 100%; padding: 8px 14px 8px 36px; border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle); background: var(--bg-input); color: var(--text-primary);
+            font-size: 13px; font-family: inherit; outline: none; transition: border .25s, background .25s;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .toolbar .search-wrap input:focus { border-color: var(--brand); background: var(--bg-input-focus); box-shadow: 0 0 0 3px var(--brand-soft); }
+        .toolbar .search-wrap input::placeholder { color: var(--text-tertiary); }
+
+        .toolbar .btn-group { display: flex; gap: 6px; flex-shrink: 0; align-items: center; }
+        .toolbar .btn-group .btn-icon {
+            width: 38px; height: 38px; border-radius: var(--radius-full); border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: transform .2s, box-shadow .2s, background .2s; flex-shrink: 0;
+        }
+        .toolbar .btn-group .btn-icon:active { transform: scale(.88); }
+        .toolbar .btn-group .btn-icon svg { width: 18px; height: 18px; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+        .toolbar .btn-group .btn-add { background: var(--brand); color: #fff; box-shadow: 0 4px 20px var(--brand-soft); }
+        .toolbar .btn-group .btn-add svg { stroke: #fff; }
+        .toolbar .btn-group .btn-add:hover { background: var(--brand-light); }
+        .toolbar .btn-group .btn-lock { background: var(--brand); color: #fff; box-shadow: 0 4px 20px var(--brand-soft); }
+        .toolbar .btn-group .btn-lock svg { stroke: #fff; }
+        .toolbar .btn-group .btn-lock:hover { background: var(--brand-light); }
+        .toolbar .btn-group .btn-view {
+            background: var(--bg-card); color: var(--text-secondary);
+            border: 1px solid var(--border-subtle); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            width: 38px; height: 38px; border-radius: var(--radius-full);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: transform .2s, background .2s, color .2s; flex-shrink: 0;
+        }
+        .toolbar .btn-group .btn-view:active { transform: scale(.88); }
+        .toolbar .btn-group .btn-view svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* ===== 分类标签栏 ===== */
+        .category-bar {
+            display: flex; gap: 6px; padding: 0 16px 8px 16px; flex-shrink: 0;
+            overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+            flex-wrap: nowrap;
+        }
+        .category-bar::-webkit-scrollbar { display: none; }
+        .category-bar .cat-tab {
+            padding: 4px 14px; border-radius: var(--radius-full);
+            background: var(--bg-input); border: 1px solid var(--border-subtle);
+            font-size: 12px; font-weight: 500; color: var(--text-secondary);
+            cursor: pointer; white-space: nowrap;
+            transition: background .2s, color .2s, border-color .2s, box-shadow .2s;
+            font-family: inherit; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
+        .category-bar .cat-tab:active { transform: scale(.94); }
+        .category-bar .cat-tab.active {
+            background: var(--brand); color: #fff; border-color: var(--brand);
+            box-shadow: 0 4px 16px var(--brand-soft);
+        }
+        .category-bar .cat-tab:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+
+        /* ===== 列表区域 ===== */
+        .entry-list-wrap { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 0 16px 12px 16px; }
+
+        .entry-list.card-view { display: flex; flex-direction: column; gap: 6px; padding-bottom: 4px; }
+
+        .entry-list.table-view { display: flex; flex-direction: column; gap: 0; padding-bottom: 4px; }
+        .entry-list.table-view .entry-card {
+            border-radius: 0; padding: 10px 14px; border-bottom: 1px solid var(--border-subtle);
+            backdrop-filter: blur(var(--blur-amount)); -webkit-backdrop-filter: blur(var(--blur-amount));
+            box-shadow: none; background: transparent;
+            display: grid; grid-template-columns: 1fr 1.2fr 0.6fr 0.6fr; align-items: center; gap: 8px;
+        }
+        .entry-list.table-view .entry-card::before { display: none; }
+        .entry-list.table-view .entry-card:active { transform: scale(.98); background: var(--bg-card-hover); }
+        .entry-list.table-view .entry-card .card-top { display: none; }
+        .entry-list.table-view .entry-card .card-body { display: none !important; }
+        .entry-list.table-view .entry-card .card-preview { display: none; }
+        .entry-list.table-view .entry-card .table-title { font-size: 14px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .entry-list.table-view .entry-card .table-account { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .entry-list.table-view .entry-card .table-category { font-size: 10px; padding: 2px 8px; border-radius: var(--radius-full); background: var(--brand-soft); color: var(--brand-light); white-space: nowrap; max-width: 60px; overflow: hidden; text-overflow: ellipsis; }
+        .entry-list.table-view .entry-card .table-actions { display: flex; gap: 2px; justify-content: flex-end; }
+        .entry-list.table-view .entry-card .table-actions button {
+            width: 28px; height: 28px; border-radius: var(--radius-full); border: none;
+            background: transparent; color: var(--text-tertiary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s, color .2s, transform .15s;
+        }
+        .entry-list.table-view .entry-card .table-actions button:active { transform: scale(.80); }
+        .entry-list.table-view .entry-card .table-actions button:hover { background: var(--bg-card-hover); color: var(--text-secondary); }
+        .entry-list.table-view .entry-card .table-actions button svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .entry-list.table-view .empty-state { grid-column: 1 / -1; text-align: center; padding: 40px 0; color: var(--text-tertiary); }
+
+        /* ===== 密码卡片 ===== */
+        .entry-card {
+            background: var(--bg-card); backdrop-filter: blur(var(--blur-amount)); -webkit-backdrop-filter: blur(var(--blur-amount));
+            border: 1px solid var(--border-glow); border-radius: var(--radius-md);
+            padding: 14px 18px 12px; box-shadow: var(--shadow-card);
+            transition: background .25s, transform .2s, border-color .3s; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .entry-card::before {
+            content: ''; position: absolute; left: 0; top: 10px; bottom: 10px;
+            width: 4px; border-radius: 0 4px 4px 0;
+            background: linear-gradient(180deg, var(--card-accent), var(--card-accent-light));
+            opacity: .85; transition: opacity .3s;
+        }
+        .entry-card:active { transform: scale(.99); background: var(--bg-card-hover); }
+
+        .entry-card .card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .entry-card .card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .entry-card .card-actions { display: flex; gap: 2px; flex-shrink: 0; align-items: center; }
+        .entry-card .card-actions button {
+            width: 30px; height: 30px; border-radius: var(--radius-full); border: none;
+            background: transparent; color: var(--text-tertiary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .2s, color .2s, transform .15s;
+        }
+        .entry-card .card-actions button:active { transform: scale(.80); }
+        .entry-card .card-actions button:hover { background: var(--bg-card-hover); color: var(--text-secondary); }
+        .entry-card .card-actions button.danger:hover { color: var(--red); background: var(--red-soft); }
+        .entry-card .card-actions button svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        /* 长按菜单 */
+        .longpress-menu {
+            position: fixed; z-index: 1500; background: var(--bg-card);
+            backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--border-glow); border-radius: var(--radius-md);
+            padding: 6px 0; box-shadow: var(--shadow-modal);
+            min-width: 160px; display: none; flex-direction: column;
+        }
+        .longpress-menu.active { display: flex; }
+        .longpress-menu .menu-item {
+            padding: 10px 16px; font-size: 14px; font-weight: 500; color: var(--text-primary);
+            cursor: pointer; display: flex; align-items: center; gap: 10px;
+            transition: background .15s; border: none; background: transparent; font-family: inherit; width: 100%; text-align: left;
+        }
+        .longpress-menu .menu-item:active { background: var(--bg-card-hover); }
+        .longpress-menu .menu-item.danger { color: var(--red); }
+        .longpress-menu .menu-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+
+        .entry-card .card-preview { font-size: 12px; color: var(--text-tertiary); padding-left: 2px; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity .25s; }
+        .entry-card .card-body.expanded ~ .card-preview { opacity: 0; pointer-events: none; margin-top: 0; max-height: 0; overflow: hidden; padding: 0; }
+
+        .entry-card .card-body { display: none; flex-direction: column; gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); }
+        .entry-card .card-body.expanded { display: flex; }
+
+        .entry-card .field-row { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); min-height: 26px; flex-wrap: wrap; }
+        .entry-card .field-row .label { color: var(--text-tertiary); min-width: 36px; font-weight: 400; font-size: 12px; }
+        .entry-card .field-row .value-wrap { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 40px; }
+        .entry-card .field-row .value { color: var(--text-primary); font-weight: 450; word-break: break-all; }
+        .entry-card .field-row .value.password { font-family: 'SF Mono', 'Menlo', monospace; letter-spacing: 1px; }
+        .entry-card .field-row .value.password .dots { background: var(--bg-input); padding: 0 10px; border-radius: var(--radius-xs); font-size: 13px; letter-spacing: 3px; color: var(--text-secondary); user-select: none; }
+        .entry-card .field-row .value.password .plain { font-family: var(--font); letter-spacing: 0; color: var(--text-primary); word-break: break-all; }
+
+        .entry-card .field-row .action-btn {
+            background: none; border: none; color: var(--text-tertiary); cursor: pointer;
+            padding: 2px 3px; display: inline-flex; align-items: center; justify-content: center;
+            transition: color .2s, transform .15s; border-radius: var(--radius-xs); flex-shrink: 0;
+        }
+        .entry-card .field-row .action-btn:active { transform: scale(.80); }
+        .entry-card .field-row .action-btn:hover { color: var(--text-secondary); background: var(--bg-card-hover); }
+        .entry-card .field-row .action-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .entry-card .custom-fields { margin-top: 6px; padding-top: 6px; border-top: 1px dashed var(--border-subtle); display: flex; flex-direction: column; gap: 2px; }
+        .entry-card .custom-fields .cf-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); min-height: 22px; }
+        .entry-card .custom-fields .cf-row .cf-key { color: var(--text-tertiary); min-width: 44px; font-weight: 400; font-size: 11px; }
+        .entry-card .custom-fields .cf-row .cf-value-wrap { display: flex; align-items: center; gap: 4px; flex: 1; min-width: 30px; }
+        .entry-card .custom-fields .cf-row .cf-value { color: var(--text-primary); word-break: break-all; }
+        .entry-card .custom-fields .cf-row .cf-value .cf-dots { background: var(--bg-input); padding: 0 8px; border-radius: var(--radius-xs); font-size: 11px; letter-spacing: 2px; color: var(--text-secondary); user-select: none; }
+        .entry-card .custom-fields .cf-row .cf-value .cf-plain { color: var(--text-primary); word-break: break-all; }
+        .entry-card .custom-fields .cf-row .action-btn {
+            background: none; border: none; color: var(--text-tertiary); cursor: pointer;
+            padding: 2px 3px; display: inline-flex; align-items: center; justify-content: center;
+            transition: color .2s, transform .15s; border-radius: var(--radius-xs); flex-shrink: 0;
+        }
+        .entry-card .custom-fields .cf-row .action-btn:active { transform: scale(.80); }
+        .entry-card .custom-fields .cf-row .action-btn:hover { color: var(--text-secondary); background: var(--bg-card-hover); }
+        .entry-card .custom-fields .cf-row .action-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+        .entry-card .card-note { font-size: 12px; color: var(--text-tertiary); margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle); display: flex; align-items: flex-start; gap: 6px; }
+        .entry-card .card-note svg { width: 14px; height: 14px; stroke: var(--text-tertiary); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 2px; }
+
+        /* ===== 空状态 ===== */
+        .empty-state {
+            text-align: center; padding: 50px 20px; color: var(--text-tertiary);
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+        }
+        .empty-state .empty-illustration {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: var(--bg-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glow);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 4px;
+        }
+        .empty-state .empty-illustration svg {
+            width: 40px; height: 40px; opacity: .4; stroke: var(--text-secondary); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+        }
+        .empty-state .main { font-size: 16px; font-weight: 500; color: var(--text-secondary); }
+        .empty-state .sub { font-size: 13px; }
+        .empty-state .empty-action {
+            margin-top: 4px; padding: 8px 20px; border-radius: var(--radius-full);
+            background: var(--brand); color: #fff; border: none;
+            font-size: 13px; font-weight: 600; font-family: inherit;
+            cursor: pointer; transition: transform .2s, background .2s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .empty-state .empty-action:active { transform: scale(.94); }
+        .empty-state .empty-action:hover { background: var(--brand-light); }
+
+        /* ===== 模态框 ===== */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; z-index: 1000;
+            background: rgba(0,0,0,0.45); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            justify-content: center; align-items: center; padding: 24px; animation: fadeIn .25s;
+        }
+        .modal-overlay.active { display: flex; }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+        .modal-card {
+            width: 100%; max-width: 380px; background: var(--bg-card); backdrop-filter: blur(40px); -webkit-backdrop-filter: blur(40px);
+            border: 1px solid var(--border-glow); border-radius: var(--radius-lg);
+            padding: 28px 24px 24px; box-shadow: var(--shadow-modal);
+            transform: scale(.92); transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+            max-height: 92vh; overflow-y: auto; text-align: center;
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+        .modal-card .modal-icon { font-size: 40px; margin-bottom: 8px; display: flex; justify-content: center; }
+        .modal-card .modal-icon svg { width: 48px; height: 48px; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+        .modal-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--text-primary); letter-spacing: -.02em; }
+        .modal-card .modal-message { font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px; padding: 0 4px; }
+        .modal-card .modal-message strong { color: var(--text-primary); }
+        .modal-card .modal-message .warn { color: var(--red); }
+        .modal-card .modal-actions { display: flex; gap: 10px; justify-content: center; }
+        .modal-card .modal-actions button {
+            flex: 1; padding: 12px 20px; border-radius: var(--radius-full); border: none;
+            font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer;
+            transition: transform .15s, background .2s; max-width: 160px;
+        }
+        .modal-card .modal-actions button:active { transform: scale(.94); }
+        .modal-card .modal-actions .btn-cancel { background: var(--bg-input); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+        .modal-card .modal-actions .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 4px 20px var(--brand-soft); }
+        .modal-card .modal-actions .btn-danger { background: var(--red); color: #fff; box-shadow: 0 4px 16px var(--red-soft); }
+        .modal-card .modal-actions .btn-danger.warning { background: #e67e22; box-shadow: 0 4px 16px rgba(230,126,34,.25); }
+        .modal-card .modal-actions .btn-alone { flex: 0 1 auto; min-width: 120px; }
+
+        .modal-card.edit-card { max-width: 400px; text-align: left; }
+        .modal-card .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+        .modal-card .modal-header h3 { font-size: 20px; font-weight: 700; letter-spacing: -.02em; color: var(--text-primary); margin-bottom: 0; }
+        .modal-card .modal-close {
+            width: 36px; height: 36px; border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle); background: transparent; color: var(--text-tertiary);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background .2s, transform .15s;
+        }
+        .modal-card .modal-close:active { transform: scale(.85); background: var(--bg-card-hover); }
+        .modal-card .modal-close svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; }
+
+        .modal-card .form-group { margin-bottom: 14px; }
+        .modal-card .form-group label { display: block; font-size: 11px; font-weight: 600; color: var(--text-tertiary); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 4px; }
+        .modal-card .form-group input,
+        .modal-card .form-group textarea {
+            width: 100%; padding: 12px 14px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle); background: var(--bg-input); color: var(--text-primary);
+            font-size: 14px; font-family: inherit; outline: none; transition: border .25s, background .25s;
+        }
+        .modal-card .form-group input:focus,
+        .modal-card .form-group textarea:focus { border-color: var(--brand); background: var(--bg-input-focus); box-shadow: 0 0 0 3px var(--brand-soft); }
+        .modal-card .form-group input::placeholder,
+        .modal-card .form-group textarea::placeholder { color: var(--text-tertiary); }
+        .modal-card .form-group textarea { resize: vertical; min-height: 54px; }
+
+        .modal-card .custom-section { margin-top: 4px; margin-bottom: 8px; }
+        .modal-card .custom-section .section-label {
+            font-size: 11px; font-weight: 600; color: var(--text-tertiary);
+            letter-spacing: .5px; text-transform: uppercase;
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;
+        }
+        .modal-card .custom-section .section-label button {
+            background: none; border: none; color: var(--brand); font-size: 12px; font-weight: 600;
+            cursor: pointer; font-family: inherit; padding: 2px 6px; border-radius: var(--radius-xs);
+            transition: background .2s; display: flex; align-items: center; gap: 4px;
+        }
+        .modal-card .custom-section .section-label button:active { background: var(--brand-soft); }
+        .modal-card .custom-section .section-label button svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+        .modal-card .custom-field-row {
+            display: flex; gap: 6px; margin-bottom: 6px; align-items: center;
+        }
+        .modal-card .custom-field-row input {
+            flex: 1; padding: 10px 12px; border-radius: var(--radius-xs);
+            border: 1px solid var(--border-subtle); background: var(--bg-input); color: var(--text-primary);
+            font-size: 13px; font-family: inherit; outline: none; transition: border .25s; min-width: 0;
+        }
+        .modal-card .custom-field-row input:focus { border-color: var(--brand); }
+        .modal-card .custom-field-row input::placeholder { color: var(--text-tertiary); }
+
+        .modal-card .custom-field-row .cf-lock-btn,
+        .modal-card .custom-field-row .cf-remove {
+            width: 34px; height: 34px; border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle); background: transparent;
+            color: var(--text-tertiary); font-size: 14px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: background .2s, color .2s, border-color .2s, transform .15s;
+            flex-shrink: 0;
+        }
+        .modal-card .custom-field-row .cf-lock-btn:active,
+        .modal-card .custom-field-row .cf-remove:active {
+            transform: scale(.88);
+        }
+        .modal-card .custom-field-row .cf-lock-btn.encrypted {
+            color: var(--brand);
+            border-color: var(--brand);
+            background: var(--brand-soft);
+        }
+        .modal-card .custom-field-row .cf-remove:hover {
+            color: var(--red);
+            border-color: var(--red);
+            background: var(--red-soft);
+        }
+        .modal-card .custom-field-row .cf-remove svg {
+            width: 16px; height: 16px;
+            stroke: currentColor; fill: none;
+            stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .modal-card .custom-hint {
+            font-size: 10px; color: var(--text-tertiary); margin-top: 6px; padding-left: 2px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .modal-card .custom-hint svg {
+            width: 12px; height: 12px;
+            stroke: var(--brand);
+            fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .modal-card .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+        .modal-card .modal-actions button {
+            flex: 1; padding: 12px; border-radius: var(--radius-full); border: none;
+            font-size: 15px; font-weight: 600; font-family: inherit; cursor: pointer;
+            transition: transform .15s, background .2s;
+        }
+        .modal-card .modal-actions button:active { transform: scale(.94); }
+        .modal-card .modal-actions .btn-cancel { background: var(--bg-input); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+        .modal-card .modal-actions .btn-save { background: var(--brand); color: #fff; box-shadow: 0 4px 20px var(--brand-soft); }
+        .modal-card .modal-actions .btn-save:hover { background: var(--brand-light); }
+
+        .toast {
+            position: fixed; bottom: calc(30px + var(--safe-bottom)); left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--bg-card); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border-glow); border-radius: var(--radius-full);
+            padding: 12px 24px; box-shadow: 0 8px 32px rgba(0,0,0,.25);
+            color: var(--text-primary); font-size: 14px; font-weight: 500;
+            z-index: 2000; opacity: 0; pointer-events: none;
+            transition: opacity .4s, transform .4s cubic-bezier(.34,1.56,.64,1);
+            white-space: nowrap; max-width: 90%; overflow: hidden; text-overflow: ellipsis;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto; }
+
+        .check-pop {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0);
+            width: 80px; height: 80px; background: var(--brand); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 2000; pointer-events: none;
+            transition: transform .4s cubic-bezier(.34,1.56,.64,1);
+            box-shadow: 0 8px 40px var(--brand-soft);
+        }
+        .check-pop.show { transform: translate(-50%,-50%) scale(1); }
+        .check-pop svg { width: 40px; height: 40px; stroke: #fff; stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+        @media (max-width: 430px) {
+            .header { padding: calc(var(--safe-top) + 4px) 12px 4px 12px; min-height: 56px; }
+            .header-title { font-size: 22px; }
+            .status-dot { width: 9px; height: 9px; }
+            .toolbar { padding: 6px 12px 6px 12px; min-height: 48px; gap: 6px; }
+            .toolbar .search-wrap input { padding: 6px 12px 6px 32px; font-size: 12px; }
+            .toolbar .btn-group .btn-icon { width: 34px; height: 34px; }
+            .toolbar .btn-group .btn-icon svg { width: 16px; height: 16px; }
+            .toolbar .btn-group .btn-view { width: 34px; height: 34px; }
+            .toolbar .btn-group .btn-view svg { width: 16px; height: 16px; }
+            .category-bar { padding: 0 12px 6px 12px; gap: 4px; }
+            .category-bar .cat-tab { font-size: 11px; padding: 3px 10px; }
+            .entry-list-wrap { padding: 0 12px 8px 12px; }
+            .entry-card { padding: 12px 14px 10px; }
+            .entry-card .card-title { font-size: 14px; }
+            .entry-card .field-row { font-size: 12px; }
+            .entry-card .card-preview { font-size: 11px; }
+            .entry-list.table-view .entry-card { padding: 8px 10px; grid-template-columns: 1fr 1fr 0.5fr 0.5fr; gap: 4px; }
+            .entry-list.table-view .entry-card .table-title { font-size: 12px; }
+            .entry-list.table-view .entry-card .table-account { font-size: 11px; }
+            .entry-list.table-view .entry-card .table-category { font-size: 9px; padding: 1px 6px; max-width: 40px; }
+            .entry-list.table-view .entry-card .table-actions button { width: 24px; height: 24px; }
+            .entry-list.table-view .entry-card .table-actions button svg { width: 12px; height: 12px; }
+            .lock-icon-wrapper { width: 72px; height: 72px; }
+            .lock-icon-wrapper .lock-icon { width: 32px; height: 32px; }
+            .lock-screen .lock-title { font-size: 18px; }
+            .lock-input-group input { padding: 12px 14px; font-size: 15px; }
+            .lock-input-group button { padding: 12px 20px; font-size: 14px; }
+            .lock-footer .forgot-link { font-size: 12px; }
+            .modal-card { padding: 24px 18px 20px; }
+            .modal-card .modal-actions button { font-size: 14px; padding: 10px 16px; }
+            .modal-card.edit-card { padding: 20px 16px 18px; }
+            .empty-state .empty-illustration { width: 64px; height: 64px; }
+            .empty-state .empty-illustration svg { width: 32px; height: 32px; }
+            .modal-card .custom-field-row .cf-lock-btn,
+            .modal-card .custom-field-row .cf-remove { width: 30px; height: 30px; }
+            .modal-card .custom-field-row .cf-remove svg { width: 14px; height: 14px; }
+        }
+        @media (max-width: 360px) {
+            .modal-card .modal-actions { flex-direction: column; align-items: center; }
+            .modal-card .modal-actions button { max-width: 100%; }
+            .modal-card.edit-card .modal-actions { flex-direction: column; }
+            .modal-card.edit-card .modal-actions button { max-width: 100%; }
+            .custom-field-row { flex-wrap: wrap; }
+            .custom-field-row input { min-width: 60px; }
+            .entry-card .field-row { flex-wrap: wrap; }
+            .entry-list.table-view .entry-card { grid-template-columns: 1fr 1fr 0.4fr 0.4fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app" id="app">
+
+        <header class="header">
+            <div class="header-left">
+                <span class="header-title">KeyBox</span>
+                <span class="status-dot locked" id="statusDot"></span>
+            </div>
+            <div class="header-actions"></div>
+        </header>
+
+        <div class="lock-screen" id="lockScreen">
+            <div class="lock-icon-wrapper">
+                <div class="lock-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0110 0v4"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="lock-title" id="lockTitle">请输入密码</div>
+            <div class="lock-hint" id="lockHint">首次使用请设置（至少 6 位数字）</div>
+            <div class="lock-input-group">
+                <input type="password" id="masterInput" placeholder="6位数字密码" autofocus inputmode="numeric" pattern="[0-9]*" />
+                <button id="unlockBtn">解锁</button>
+            </div>
+            <div class="lock-footer" id="lockFooter">
+                <button class="forgot-link" id="forgotBtn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    忘记密码？重置数据
+                </button>
+            </div>
+        </div>
+
+        <div class="main-screen" id="mainScreen">
+            <div class="toolbar">
+                <div class="search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="搜索标题、账号、备注…" />
+                </div>
+                <div class="btn-group">
+                    <button class="btn-view" id="viewToggleBtn" aria-label="切换视图">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                    </button>
+                    <button class="btn-icon btn-add" id="addBtn" aria-label="添加密码">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <button class="btn-icon btn-lock" id="lockBtn" aria-label="锁定">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="category-bar" id="categoryBar"></div>
+
+            <div class="entry-list-wrap">
+                <div class="entry-list card-view" id="entryList"></div>
+            </div>
+        </div>
+
+        <!-- 长按菜单 -->
+        <div class="longpress-menu" id="longpressMenu">
+            <button class="menu-item" data-action="copy-account">
+                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                复制账号
+            </button>
+            <button class="menu-item" data-action="copy-password">
+                <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                复制密码
+            </button>
+            <button class="menu-item" data-action="edit">
+                <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                编辑
+            </button>
+            <button class="menu-item danger" data-action="delete">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                删除
+            </button>
+        </div>
+
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-card">
+                <div class="modal-icon" id="modalIcon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                </div>
+                <h3 id="modalTitle">提示</h3>
+                <div class="modal-message" id="modalMessage">消息内容</div>
+                <div class="modal-actions" id="modalActions">
+                    <button class="btn-primary btn-alone" id="modalConfirmBtn">确定</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="editModal">
+            <div class="modal-card edit-card">
+                <div class="modal-header">
+                    <h3 id="editModalTitle">新建密码</h3>
+                    <button class="modal-close" id="editModalClose">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                </div>
+                <div class="form-group">
+                    <label>标题 <span style="color:var(--red);">*</span></label>
+                    <input type="text" id="fTitle" placeholder="网站 / 应用名称" maxlength="40" />
+                </div>
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="text" id="fUsername" placeholder="账号 / 邮箱" maxlength="60" />
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="fPassword" placeholder="密码" maxlength="120" />
+                </div>
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="fNote" placeholder="其他说明…" maxlength="200"></textarea>
+                </div>
+                <div class="custom-section">
+                    <div class="section-label">
+                        <span>自定义字段</span>
+                        <button id="addCustomBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            添加
+                        </button>
+                    </div>
+                    <div id="customFieldsContainer"></div>
+                    <div class="custom-hint">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4"/>
+                        </svg>
+                        点击锁图标可加密该字段
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" id="editCancelBtn">取消</button>
+                    <button class="btn-save" id="editSaveBtn">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+        <div class="check-pop" id="checkPop">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            const STORAGE_ENTRIES = 'keybox_entries';
+            const STORAGE_SALT = 'keybox_salt';
+
+            let entries = [];
+            let nextId = 1;
+            let masterKey = null;
+            let salt = null;
+            let isUnlocked = false;
+            let editingId = null;
+            let passwordVisible = {};
+            let cfVisible = {};
+            let cardExpanded = {};
+            let currentCategory = null;
+            let currentView = 'card';
+
+            let longpressTimer = null;
+            let longpressTargetId = null;
+            let isLongpressTriggered = false;
+
+            const $ = id => document.getElementById(id);
+            const dom = {
+                lockScreen: $('lockScreen'),
+                mainScreen: $('mainScreen'),
+                masterInput: $('masterInput'),
+                unlockBtn: $('unlockBtn'),
+                lockTitle: $('lockTitle'),
+                lockHint: $('lockHint'),
+                lockFooter: $('lockFooter'),
+                forgotBtn: $('forgotBtn'),
+                statusDot: $('statusDot'),
+                searchInput: $('searchInput'),
+                entryList: $('entryList'),
+                categoryBar: $('categoryBar'),
+                viewToggleBtn: $('viewToggleBtn'),
+                addBtn: $('addBtn'),
+                lockBtn: $('lockBtn'),
+                editModal: $('editModal'),
+                editModalClose: $('editModalClose'),
+                editCancelBtn: $('editCancelBtn'),
+                editSaveBtn: $('editSaveBtn'),
+                editModalTitle: $('editModalTitle'),
+                fTitle: $('fTitle'),
+                fUsername: $('fUsername'),
+                fPassword: $('fPassword'),
+                fNote: $('fNote'),
+                customFieldsContainer: $('customFieldsContainer'),
+                addCustomBtn: $('addCustomBtn'),
+                modalOverlay: $('modalOverlay'),
+                modalIcon: $('modalIcon'),
+                modalTitle: $('modalTitle'),
+                modalMessage: $('modalMessage'),
+                modalActions: $('modalActions'),
+                modalConfirmBtn: $('modalConfirmBtn'),
+                longpressMenu: $('longpressMenu'),
+                toast: $('toast'),
+                checkPop: $('checkPop'),
+            };
+
+            // ================================================================
+            //  通用模态框
+            // ================================================================
+            function showModal(iconHTML, title, message, buttons) {
+                return new Promise((resolve) => {
+                    dom.modalIcon.innerHTML = iconHTML || '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+                    dom.modalTitle.textContent = title || '提示';
+                    dom.modalMessage.innerHTML = message || '';
+                    dom.modalActions.innerHTML = '';
+                    if (buttons && buttons.length) {
+                        buttons.forEach((b) => {
+                            const btn = document.createElement('button');
+                            btn.textContent = b.text || '确定';
+                            btn.className = b.cls || 'btn-primary';
+                            if (b.cls === 'btn-alone') btn.classList.add('btn-alone');
+                            btn.addEventListener('click', () => {
+                                dom.modalOverlay.classList.remove('active');
+                                if (b.action) b.action();
+                                resolve(b.value !== undefined ? b.value : true);
+                            });
+                            dom.modalActions.appendChild(btn);
+                        });
+                    } else {
+                        const btn = document.createElement('button');
+                        btn.textContent = '确定';
+                        btn.className = 'btn-primary btn-alone';
+                        btn.addEventListener('click', () => {
+                            dom.modalOverlay.classList.remove('active');
+                            resolve(true);
+                        });
+                        dom.modalActions.appendChild(btn);
+                    }
+                    dom.modalOverlay.classList.add('active');
+                });
+            }
+
+            function showAlert(title, message) {
+                return showModal(
+                    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+                    title || '提示',
+                    message || '',
+                    [{ text: '确定', cls: 'btn-primary btn-alone' }]
+                );
+            }
+
+            function showDangerConfirm(title, message, confirmText = '确定', cancelText = '取消') {
+                return new Promise((resolve) => {
+                    dom.modalIcon.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+                    dom.modalTitle.textContent = title || '确认';
+                    dom.modalMessage.innerHTML = message || '';
+                    dom.modalActions.innerHTML = `
+                        <button class="btn-cancel" id="modalConfirmCancel">${cancelText}</button>
+                        <button class="btn-danger warning" id="modalConfirmOk">${confirmText}</button>
+                    `;
+                    dom.modalOverlay.classList.add('active');
+                    document.getElementById('modalConfirmCancel').addEventListener('click', () => {
+                        dom.modalOverlay.classList.remove('active');
+                        resolve(false);
+                    });
+                    document.getElementById('modalConfirmOk').addEventListener('click', () => {
+                        dom.modalOverlay.classList.remove('active');
+                        resolve(true);
+                    });
+                });
+            }
+
+            // ================================================================
+            //  工具函数
+            // ================================================================
+            function showToast(msg, duration = 1800) {
+                const el = dom.toast;
+                el.textContent = msg;
+                el.classList.add('show');
+                clearTimeout(el._timer);
+                el._timer = setTimeout(() => el.classList.remove('show'), duration);
+            }
+
+            function escapeHtml(text) {
+                if (!text) return '';
+                const d = document.createElement('div');
+                d.textContent = text;
+                return d.innerHTML;
+            }
+
+            function pad(n) { return String(n).padStart(2, '0'); }
+
+            function formatDate(d) {
+                const y = d.getFullYear(),
+                    m = d.getMonth() + 1,
+                    day = d.getDate();
+                return y + '-' + pad(m) + '-' + pad(day);
+            }
+
+            function genId() {
+                return Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+            }
+
+            function haptic(style = 'light') {
+                if (navigator.vibrate) {
+                    navigator.vibrate(style === 'light' ? 8 : 20);
+                }
+            }
+
+            function getFieldId(entryId, index) {
+                return entryId + '_cf_' + index;
+            }
+
+            function getEntryCategory(entry) {
+                if (!entry.customFields) return null;
+                for (const cf of entry.customFields) {
+                    if (cf.key === '分类' && cf.value) return cf.value;
+                }
+                return null;
+            }
+
+            function getAllCategories() {
+                const cats = new Set();
+                for (const entry of entries) {
+                    const cat = getEntryCategory(entry);
+                    if (cat) cats.add(cat);
+                }
+                return Array.from(cats);
+            }
+
+            const THEME_COLORS = [
+                '#912130', '#002FA7', '#C8655A', '#6B4B3E', '#4A4A4A',
+                '#1D7874', '#3A2C4F', '#1D4E89', '#2D6A4F', '#C85A17'
+            ];
+
+            function getCardAccentColor(id) {
+                let hash = 0;
+                for (let i = 0; i < id.length; i++) {
+                    hash = id.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const idx = Math.abs(hash) % THEME_COLORS.length;
+                return THEME_COLORS[idx];
+            }
+
+            function getCardAccentLight(id) {
+                let hash = 0;
+                for (let i = 0; i < id.length; i++) {
+                    hash = id.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const idx = Math.abs(hash) % THEME_COLORS.length;
+                const lightMap = {
+                    '#912130': '#d95662',
+                    '#002FA7': '#4a7fc5',
+                    '#C8655A': '#e69d8c',
+                    '#6B4B3E': '#b68b7e',
+                    '#4A4A4A': '#8e8e93',
+                    '#1D7874': '#4ecdc4',
+                    '#3A2C4F': '#8b6bb3',
+                    '#1D4E89': '#4a7fb5',
+                    '#2D6A4F': '#52b788',
+                    '#C85A17': '#e67e22'
+                };
+                return lightMap[THEME_COLORS[idx]] || THEME_COLORS[idx];
+            }
+
+            // ================================================================
+            //  加密 / 解密
+            // ================================================================
+            async function deriveKey(password, salt) {
+                const enc = new TextEncoder();
+                const keyMaterial = await crypto.subtle.importKey(
+                    'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
+                );
+                return crypto.subtle.deriveKey({
+                    name: 'PBKDF2',
+                    salt: salt,
+                    iterations: 120000,
+                    hash: 'SHA-256'
+                }, keyMaterial, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']);
+            }
+
+            async function encryptData(key, data) {
+                const enc = new TextEncoder();
+                const encoded = enc.encode(JSON.stringify(data));
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoded);
+                const result = new Uint8Array(iv.length + ciphertext.byteLength);
+                result.set(iv);
+                result.set(new Uint8Array(ciphertext), iv.length);
+                return result;
+            }
+
+            async function decryptData(key, encrypted) {
+                const iv = encrypted.slice(0, 12);
+                const ciphertext = encrypted.slice(12);
+                try {
+                    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ciphertext);
+                    const dec = new TextDecoder();
+                    return JSON.parse(dec.decode(decrypted));
+                } catch (_) {
+                    return null;
+                }
+            }
+
+            async function encryptFieldValue(key, value) {
+                if (!key || !value) return value;
+                const enc = new TextEncoder();
+                const encoded = enc.encode(value);
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const ciphertext = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, encoded);
+                const combined = new Uint8Array(iv.length + ciphertext.byteLength);
+                combined.set(iv);
+                combined.set(new Uint8Array(ciphertext), iv.length);
+                return btoa(String.fromCharCode(...combined));
+            }
+
+            async function decryptFieldValue(key, base64) {
+                if (!key || !base64) return '';
+                try {
+                    const combined = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+                    const iv = combined.slice(0, 12);
+                    const data = combined.slice(12);
+                    const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+                    return new TextDecoder().decode(decrypted);
+                } catch (_) {
+                    return '[解密失败]';
+                }
+            }
+
+            function loadSaltFromStore() {
+                const raw = localStorage.getItem(STORAGE_SALT);
+                if (!raw) return null;
+                try {
+                    const binary = atob(raw);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                    return bytes;
+                } catch (_) { return null; }
+            }
+
+            function saveSaltToStore(salt) {
+                const base64 = btoa(String.fromCharCode(...salt));
+                localStorage.setItem(STORAGE_SALT, base64);
+            }
+
+            function loadEncryptedFromStore() {
+                const raw = localStorage.getItem(STORAGE_ENTRIES);
+                if (!raw) return null;
+                try {
+                    const binary = atob(raw);
+                    const bytes = new Uint8Array(binary.length);
+                    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+                    return bytes;
+                } catch (_) { return null; }
+            }
+
+            function saveEncryptedToStore(encrypted) {
+                const base64 = btoa(String.fromCharCode(...encrypted));
+                localStorage.setItem(STORAGE_ENTRIES, base64);
+            }
+
+            // ================================================================
+            //  重置数据
+            // ================================================================
+            function resetAllData() {
+                localStorage.removeItem(STORAGE_ENTRIES);
+                localStorage.removeItem(STORAGE_SALT);
+                entries = [];
+                nextId = 1;
+                masterKey = null;
+                salt = null;
+                isUnlocked = false;
+                passwordVisible = {};
+                cfVisible = {};
+                cardExpanded = {};
+                showAlert('已重置', '所有数据已清除，页面将刷新，你可以重新设置主密码。').then(() => {
+                    location.reload(true);
+                });
+            }
+
+            // ================================================================
+            //  核心：解锁
+            // ================================================================
+            async function unlock(password) {
+                const loadedSalt = loadSaltFromStore();
+
+                if (!loadedSalt) {
+                    const newSalt = crypto.getRandomValues(new Uint8Array(16));
+                    saveSaltToStore(newSalt);
+                    const key = await deriveKey(password, newSalt);
+                    const emptyData = { entries: [], nextId: 1 };
+                    const encrypted = await encryptData(key, emptyData);
+                    saveEncryptedToStore(encrypted);
+                    masterKey = key;
+                    salt = newSalt;
+                    entries = [];
+                    nextId = 1;
+                    isUnlocked = true;
+                    dom.lockScreen.style.display = 'none';
+                    dom.mainScreen.classList.add('active');
+                    updateStatus(true);
+                    renderAll();
+                    await showAlert('已设置', '主密码已设置成功，请牢记！<br />此密码用于解锁所有数据，丢失无法恢复。');
+                    return true;
+                }
+
+                salt = loadedSalt;
+                try {
+                    const key = await deriveKey(password, salt);
+                    const encrypted = loadEncryptedFromStore();
+
+                    if (!encrypted) {
+                        const emptyData = { entries: [], nextId: 1 };
+                        const newEncrypted = await encryptData(key, emptyData);
+                        saveEncryptedToStore(newEncrypted);
+                        masterKey = key;
+                        entries = [];
+                        nextId = 1;
+                        isUnlocked = true;
+                        dom.lockScreen.style.display = 'none';
+                        dom.mainScreen.classList.add('active');
+                        updateStatus(true);
+                        renderAll();
+                        await showAlert('已初始化', '数据已初始化完成。');
+                        return true;
+                    }
+
+                    const data = await decryptData(key, encrypted);
+
+                    if (data === null) {
+                        await showAlert('密码错误', '主密码不正确，请重新输入。<br />如果忘记主密码，请点击底部「忘记主密码？重置数据」。');
+                        return false;
+                    }
+
+                    masterKey = key;
+                    entries = data.entries || [];
+                    nextId = data.nextId || 1;
+                    isUnlocked = true;
+                    dom.lockScreen.style.display = 'none';
+                    dom.mainScreen.classList.add('active');
+                    updateStatus(true);
+                    renderAll();
+                    return true;
+
+                } catch (e) {
+                    console.error(e);
+                    await showAlert('解锁失败', '解密过程发生错误，请重试。');
+                    return false;
+                }
+            }
+
+            // ================================================================
+            //  锁定
+            // ================================================================
+            function lock() {
+                if (!isUnlocked) return;
+                isUnlocked = false;
+                masterKey = null;
+                entries = [];
+                dom.mainScreen.classList.remove('active');
+                dom.lockScreen.style.display = 'flex';
+                dom.masterInput.value = '';
+                updateStatus(false);
+                dom.lockTitle.textContent = '请输入密码';
+                dom.lockHint.textContent = '输入你之前设置的密码';
+                showToast('已锁定');
+                haptic('medium');
+            }
+
+            // ================================================================
+            //  保存数据
+            // ================================================================
+            async function saveEntries() {
+                if (!isUnlocked || !masterKey) return;
+                const data = { entries, nextId };
+                try {
+                    const encrypted = await encryptData(masterKey, data);
+                    saveEncryptedToStore(encrypted);
+                } catch (e) {
+                    await showAlert('保存失败', '数据保存失败，请检查后重试。');
+                }
+            }
+
+            function updateStatus(unlocked) {
+                const dot = dom.statusDot;
+                if (unlocked) {
+                    dot.className = 'status-dot unlocked';
+                } else {
+                    dot.className = 'status-dot locked';
+                }
+            }
+
+            // ================================================================
+            //  删除
+            // ================================================================
+            function deleteEntry(id) {
+                entries = entries.filter(e => e.id !== id);
+                delete passwordVisible[id];
+                delete cardExpanded[id];
+                Object.keys(cfVisible).forEach(key => {
+                    if (key.startsWith(id + '_cf_')) delete cfVisible[key];
+                });
+                saveEntries();
+                renderAll();
+                showToast('已删除');
+                haptic('medium');
+            }
+
+            // ================================================================
+            //  渲染
+            // ================================================================
+            function getFilteredEntries() {
+                const q = dom.searchInput.value.trim().toLowerCase();
+                let filtered = entries;
+                if (q) {
+                    filtered = filtered.filter(e => {
+                        let searchStr = (e.title + ' ' + e.username + ' ' + e.note).toLowerCase();
+                        if (e.customFields) {
+                            e.customFields.forEach(cf => {
+                                if (!cf.encrypted) {
+                                    searchStr += ' ' + (cf.key + ' ' + cf.value).toLowerCase();
+                                }
+                            });
+                        }
+                        return searchStr.includes(q);
+                    });
+                }
+                if (currentCategory !== null) {
+                    filtered = filtered.filter(e => getEntryCategory(e) === currentCategory);
+                }
+                return filtered;
+            }
+
+            function renderCategoryBar() {
+                const cats = getAllCategories();
+                const bar = dom.categoryBar;
+                bar.innerHTML = '';
+                cats.forEach(cat => {
+                    const tab = document.createElement('button');
+                    const isActive = (cat === currentCategory);
+                    tab.className = 'cat-tab' + (isActive ? ' active' : '');
+                    tab.textContent = cat;
+                    tab.dataset.cat = cat;
+                    tab.addEventListener('click', () => {
+                        if (currentCategory === cat) {
+                            currentCategory = null;
+                        } else {
+                            currentCategory = cat;
+                        }
+                        renderCategoryBar();
+                        renderList();
+                    });
+                    bar.appendChild(tab);
+                });
+            }
+
+            function renderAll() {
+                renderCategoryBar();
+                renderList();
+            }
+
+            function renderList() {
+                const container = dom.entryList;
+                const filtered = getFilteredEntries();
+
+                if (entries.length === 0) {
+                    container.className = 'entry-list ' + (currentView === 'card' ? 'card-view' : 'table-view');
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-illustration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                                    <path d="M7 11V7a5 5 0 0110 0v4"/>
+                                </svg>
+                            </div>
+                            <div class="main">还没有密码</div>
+                            <div class="sub">点击下方按钮添加第一条</div>
+                            <button class="empty-action" id="emptyAddBtn">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                添加密码
+                            </button>
+                        </div>
+                    `;
+                    const emptyBtn = document.getElementById('emptyAddBtn');
+                    if (emptyBtn) {
+                        emptyBtn.addEventListener('click', () => {
+                            if (!isUnlocked) { showAlert('请先解锁', '请先解锁才能添加密码。'); return; }
+                            openEdit(null);
+                        });
+                    }
+                    return;
+                }
+
+                if (filtered.length === 0) {
+                    container.className = 'entry-list ' + (currentView === 'card' ? 'card-view' : 'table-view');
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-illustration">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </div>
+                            <div class="main">没有匹配的结果</div>
+                            <div class="sub">试试其他关键词</div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                if (currentView === 'card') {
+                    renderCardView(container, filtered);
+                } else {
+                    renderTableView(container, filtered);
+                }
+            }
+
+            function renderCardView(container, filtered) {
+                container.className = 'entry-list card-view';
+                let html = '';
+                for (const entry of filtered) {
+                    const isExpanded = cardExpanded[entry.id] || false;
+                    const isVisible = passwordVisible[entry.id] || false;
+                    const pwdDisplay = isVisible ? (entry.password || '') : '••••••••';
+                    const pwdClass = isVisible ? 'plain' : 'dots';
+                    const customFields = entry.customFields || [];
+                    const previewText = entry.username || '';
+                    const accentColor = getCardAccentColor(entry.id);
+                    const accentLight = getCardAccentLight(entry.id);
+                    const cat = getEntryCategory(entry);
+
+                    html += `
+                        <div class="entry-card" data-id="${entry.id}" style="--card-accent: ${accentColor}; --card-accent-light: ${accentLight};">
+                            <div class="card-top">
+                                <span class="card-title">${escapeHtml(entry.title)}</span>
+                                <div class="card-actions">
+                                    ${cat ? `<span style="font-size:10px;padding:2px 8px;border-radius:var(--radius-full);background:var(--brand-soft);color:var(--brand-light);white-space:nowrap;">${escapeHtml(cat)}</span>` : ''}
+                                    <button class="edit-btn" data-id="${entry.id}" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+                                    <button class="delete-btn" data-id="${entry.id}" title="删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                                </div>
+                            </div>
+                            <div class="card-body ${isExpanded ? 'expanded' : ''}">
+                                <div class="field-row">
+                                    <span class="label">账号</span>
+                                    <span class="value-wrap">
+                                        <span class="value">${escapeHtml(entry.username) || '—'}</span>
+                                        ${entry.username ? `<button class="action-btn copy-btn" data-copy="${escapeHtml(entry.username)}" title="复制账号"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>` : ''}
+                                    </span>
+                                </div>
+                                <div class="field-row">
+                                    <span class="label">密码</span>
+                                    <span class="value-wrap">
+                                        <span class="value password">
+                                            <span class="${pwdClass}">${escapeHtml(pwdDisplay)}</span>
+                                        </span>
+                                        <button class="action-btn toggle-pwd" data-id="${entry.id}" title="切换明文">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                ${isVisible ? `
+                                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                                                <line x1="1" y1="1" x2="23" y2="23"/>
+                                                ` : `
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                                `}
+                                            </svg>
+                                        </button>
+                                        ${entry.password ? `<button class="action-btn copy-btn" data-copy="${escapeHtml(entry.password)}" title="复制密码"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>` : ''}
+                                    </span>
+                                </div>
+                                ${entry.note ? `
+                                    <div class="card-note">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                            <line x1="16" y1="13" x2="8" y2="13"/>
+                                            <line x1="16" y1="17" x2="8" y2="17"/>
+                                            <polyline points="10 9 9 9 8 9"/>
+                                        </svg>
+                                        <span>${escapeHtml(entry.note)}</span>
+                                    </div>
+                                ` : ''}
+                                ${customFields.length > 0 ? `
+                                    <div class="custom-fields">
+                                        ${customFields.map((cf, idx) => {
+                                            const fid = getFieldId(entry.id, idx);
+                                            const isCfVisible = cfVisible[fid] || false;
+                                            const isEncrypted = cf.encrypted || false;
+                                            let displayValue = cf.value || '';
+                                            let displayClass = 'cf-plain';
+
+                                            if (isEncrypted) {
+                                                if (isCfVisible) {
+                                                    displayValue = cf._decrypted !== undefined ? cf._decrypted : '••••••••';
+                                                    displayClass = 'cf-plain';
+                                                } else {
+                                                    displayValue = '••••••••';
+                                                    displayClass = 'cf-dots';
+                                                }
+                                            } else {
+                                                displayValue = cf.value || '';
+                                                displayClass = 'cf-plain';
+                                            }
+
+                                            return `
+                                                <div class="cf-row">
+                                                    <span class="cf-key">${escapeHtml(cf.key)}</span>
+                                                    <span class="cf-value-wrap">
+                                                        <span class="cf-value">
+                                                            <span class="${displayClass}" data-fid="${fid}">${escapeHtml(displayValue)}</span>
+                                                        </span>
+                                                        ${isEncrypted ? `
+                                                        <button class="action-btn toggle-cf" data-fid="${fid}" data-entry="${entry.id}" data-idx="${idx}" title="切换明文">
+                                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                ${isCfVisible ? `
+                                                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                                                                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                                                                <line x1="1" y1="1" x2="23" y2="23"/>
+                                                                ` : `
+                                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                                <circle cx="12" cy="12" r="3"/>
+                                                                `}
+                                                            </svg>
+                                                        </button>` : ''}
+                                                    </span>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                            ${previewText ? `<div class="card-preview">${escapeHtml(previewText)}</div>` : ''}
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+                bindCardEvents(container);
+            }
+
+            function renderTableView(container, filtered) {
+                container.className = 'entry-list table-view';
+                let html = '';
+                for (const entry of filtered) {
+                    const accentColor = getCardAccentColor(entry.id);
+                    const cat = getEntryCategory(entry);
+
+                    html += `
+                        <div class="entry-card" data-id="${entry.id}" style="--card-accent: ${accentColor};">
+                            <span class="table-title">${escapeHtml(entry.title)}</span>
+                            <span class="table-account">${escapeHtml(entry.username || '—')}</span>
+                            <span class="table-category">${cat ? escapeHtml(cat) : ''}</span>
+                            <span class="table-actions">
+                                <button class="edit-btn" data-id="${entry.id}" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+                                <button class="delete-btn" data-id="${entry.id}" title="删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+                            </span>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+                bindTableEvents(container);
+            }
+
+            function bindCardEvents(container) {
+                container.querySelectorAll('.entry-card').forEach(card => {
+                    card.addEventListener('click', e => {
+                        if (e.target.closest('button')) return;
+                        const id = card.dataset.id;
+                        cardExpanded[id] = !cardExpanded[id];
+                        renderList();
+                    });
+
+                    let timer = null;
+                    let isPressed = false;
+                    const startPress = (e) => {
+                        if (e.touches && e.touches.length > 1) return;
+                        isPressed = true;
+                        longpressTargetId = card.dataset.id;
+                        timer = setTimeout(() => {
+                            if (isPressed && longpressTargetId) {
+                                isLongpressTriggered = true;
+                                const rect = card.getBoundingClientRect();
+                                dom.longpressMenu.style.top = (rect.top + rect.height / 2 - 60) + 'px';
+                                dom.longpressMenu.style.left = (rect.left + rect.width / 2 - 80) + 'px';
+                                dom.longpressMenu.style.display = 'flex';
+                                dom.longpressMenu.dataset.id = longpressTargetId;
+                                haptic('light');
+                                bindMenuItems();
+                            }
+                        }, 500);
+                    };
+                    const endPress = () => {
+                        isPressed = false;
+                        clearTimeout(timer);
+                        timer = null;
+                        if (isLongpressTriggered) {
+                            isLongpressTriggered = false;
+                        }
+                    };
+                    card.addEventListener('touchstart', startPress, { passive: true });
+                    card.addEventListener('touchend', endPress, { passive: true });
+                    card.addEventListener('touchmove', endPress, { passive: true });
+                    card.addEventListener('mousedown', startPress);
+                    card.addEventListener('mouseup', endPress);
+                    card.addEventListener('mouseleave', endPress);
+
+                    const editBtn = card.querySelector('.edit-btn');
+                    if (editBtn) {
+                        editBtn.addEventListener('click', e => {
+                            e.stopPropagation();
+                            const id = editBtn.dataset.id;
+                            openEdit(id);
+                        });
+                    }
+
+                    const delBtn = card.querySelector('.delete-btn');
+                    if (delBtn) {
+                        delBtn.addEventListener('click', e => {
+                            e.stopPropagation();
+                            const id = delBtn.dataset.id;
+                            confirmDelete(id);
+                        });
+                    }
+
+                    card.querySelectorAll('.copy-btn').forEach(btn => {
+                        btn.addEventListener('click', e => {
+                            e.stopPropagation();
+                            const text = btn.dataset.copy;
+                            if (text) {
+                                copyToClipboard(text);
+                                showToast('已复制');
+                                haptic('light');
+                            }
+                        });
+                    });
+
+                    card.querySelectorAll('.toggle-pwd').forEach(btn => {
+                        btn.addEventListener('click', e => {
+                            e.stopPropagation();
+                            const id = btn.dataset.id;
+                            if (id) {
+                                passwordVisible[id] = !passwordVisible[id];
+                                renderList();
+                            }
+                        });
+                    });
+
+                    card.querySelectorAll('.toggle-cf').forEach(btn => {
+                        btn.addEventListener('click', async e => {
+                            e.stopPropagation();
+                            const fid = btn.dataset.fid;
+                            const entryId = btn.dataset.entry;
+                            const idx = parseInt(btn.dataset.idx);
+                            const entry = entries.find(e => e.id === entryId);
+                            if (!entry || !entry.customFields || !entry.customFields[idx]) return;
+                            const field = entry.customFields[idx];
+                            if (!field.encrypted) return;
+                            const current = cfVisible[fid] || false;
+                            if (!current && masterKey) {
+                                const decrypted = await decryptFieldValue(masterKey, field.value);
+                                field._decrypted = decrypted;
+                                cfVisible[fid] = true;
+                            } else {
+                                cfVisible[fid] = false;
+                                delete field._decrypted;
+                            }
+                            renderList();
+                        });
+                    });
+                });
+            }
+
+            function bindTableEvents(container) {
+                container.querySelectorAll('.entry-card').forEach(card => {
+                    card.addEventListener('click', e => {
+                        if (e.target.closest('button')) return;
+                        const id = card.dataset.id;
+                        openEdit(id);
+                    });
+
+                    const editBtn = card.querySelector('.edit-btn');
+                    if (editBtn) {
+                        editBtn.addEventListener('click', e => {
+                            e.stopPropagation();
+                            const id = editBtn.dataset.id;
+                            openEdit(id);
+                        });
+                    }
+
+                    const delBtn = card.querySelector('.delete-btn');
+                    if (delBtn) {
+                        delBtn.addEventListener('click', e => {
+                            e.stopPropagation();
+                            const id = delBtn.dataset.id;
+                            confirmDelete(id);
+                        });
+                    }
+                });
+            }
+
+            function bindMenuItems() {
+                const menu = dom.longpressMenu;
+                const id = menu.dataset.id;
+                menu.querySelectorAll('.menu-item').forEach(item => {
+                    item.onclick = null;
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = item.dataset.action;
+                        menu.style.display = 'none';
+                        const entry = entries.find(e => e.id === id);
+                        if (!entry) return;
+                        switch (action) {
+                            case 'copy-account':
+                                if (entry.username) {
+                                    copyToClipboard(entry.username);
+                                    showToast('账号已复制');
+                                    haptic('light');
+                                } else {
+                                    showToast('没有账号可复制');
+                                }
+                                break;
+                            case 'copy-password':
+                                if (entry.password) {
+                                    copyToClipboard(entry.password);
+                                    showToast('密码已复制');
+                                    haptic('light');
+                                } else {
+                                    showToast('没有密码可复制');
+                                }
+                                break;
+                            case 'edit':
+                                openEdit(id);
+                                break;
+                            case 'delete':
+                                confirmDelete(id);
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                });
+            }
+
+            document.addEventListener('click', () => {
+                dom.longpressMenu.style.display = 'none';
+            });
+            document.addEventListener('touchstart', () => {
+                dom.longpressMenu.style.display = 'none';
+            });
+
+            function copyToClipboard(text) {
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+                } else {
+                    fallbackCopy(text);
+                }
+            }
+
+            function fallbackCopy(text) {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                document.body.removeChild(ta);
+            }
+
+            // ================================================================
+            //  CRUD
+            // ================================================================
+            async function addEntry(title, username, password, note, customFields) {
+                const processedFields = [];
+                for (const cf of customFields) {
+                    if (cf.encrypted && cf.value && masterKey) {
+                        const encrypted = await encryptFieldValue(masterKey, cf.value);
+                        processedFields.push({ key: cf.key, value: encrypted, encrypted: true });
+                    } else {
+                        processedFields.push({ key: cf.key, value: cf.value, encrypted: false });
+                    }
+                }
+
+                const entry = {
+                    id: genId(),
+                    title: title.trim(),
+                    username: username.trim(),
+                    password: password,
+                    note: note.trim(),
+                    customFields: processedFields,
+                    createdAt: formatDate(new Date()),
+                };
+                entries.push(entry);
+                await saveEntries();
+                renderAll();
+                showToast('已添加');
+                haptic('light');
+            }
+
+            async function updateEntry(id, title, username, password, note, customFields) {
+                const idx = entries.findIndex(e => e.id === id);
+                if (idx === -1) return;
+
+                const processedFields = [];
+                for (const cf of customFields) {
+                    if (cf.encrypted && cf.value && masterKey) {
+                        const encrypted = await encryptFieldValue(masterKey, cf.value);
+                        processedFields.push({ key: cf.key, value: encrypted, encrypted: true });
+                    } else {
+                        processedFields.push({ key: cf.key, value: cf.value, encrypted: false });
+                    }
+                }
+
+                entries[idx] = {
+                    ...entries[idx],
+                    title: title.trim(),
+                    username: username.trim(),
+                    password: password,
+                    note: note.trim(),
+                    customFields: processedFields,
+                };
+                await saveEntries();
+                renderAll();
+                showToast('已更新');
+                haptic('light');
+            }
+
+            // ================================================================
+            //  自定义字段
+            // ================================================================
+            function addCustomFieldRow(key = '', value = '', encrypted = false) {
+                const container = dom.customFieldsContainer;
+                const row = document.createElement('div');
+                row.className = 'custom-field-row';
+                const lockIcon = encrypted ? 'fa-lock' : 'fa-unlock';
+                const lockClass = encrypted ? 'encrypted' : '';
+                row.innerHTML = `
+                    <input type="text" class="cf-key-input" placeholder="字段名" value="${key}" maxlength="30" />
+                    <input type="text" class="cf-value-input" placeholder="值" value="${value}" maxlength="60" />
+                    <button class="cf-lock-btn ${lockClass}" data-encrypted="${encrypted ? 'true' : 'false'}" title="切换加密">
+                        <i class="fas ${lockIcon}"></i>
+                    </button>
+                    <button class="cf-remove" title="删除字段">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                `;
+                const lockBtn = row.querySelector('.cf-lock-btn');
+                lockBtn.addEventListener('click', () => {
+                    const current = lockBtn.dataset.encrypted === 'true';
+                    const next = !current;
+                    lockBtn.dataset.encrypted = next ? 'true' : 'false';
+                    lockBtn.classList.toggle('encrypted', next);
+                    lockBtn.querySelector('i').className = next ? 'fas fa-lock' : 'fas fa-unlock';
+                });
+                row.querySelector('.cf-remove').addEventListener('click', () => {
+                    row.remove();
+                });
+                container.appendChild(row);
+                return row;
+            }
+
+            function handleAddCustomField() {
+                const container = dom.customFieldsContainer;
+                const rows = container.querySelectorAll('.custom-field-row');
+                for (const row of rows) {
+                    const keyInput = row.querySelector('.cf-key-input');
+                    const valInput = row.querySelector('.cf-value-input');
+                    if (keyInput.value.trim() === '' && valInput.value.trim() === '') {
+                        keyInput.focus();
+                        return;
+                    }
+                }
+                const newRow = addCustomFieldRow('', '', false);
+                const keyInput = newRow.querySelector('.cf-key-input');
+                if (keyInput) keyInput.focus();
+            }
+
+            function collectCustomFields() {
+                const rows = dom.customFieldsContainer.querySelectorAll('.custom-field-row');
+                const fields = [];
+                rows.forEach(row => {
+                    const key = row.querySelector('.cf-key-input').value.trim();
+                    const value = row.querySelector('.cf-value-input').value.trim();
+                    const encrypted = row.querySelector('.cf-lock-btn').dataset.encrypted === 'true';
+                    if (key) {
+                        fields.push({ key, value, encrypted });
+                    }
+                });
+                return fields;
+            }
+
+            // ================================================================
+            //  编辑模态框
+            // ================================================================
+            async function openEdit(id) {
+                if (!isUnlocked) { await showAlert('请先解锁', '请先解锁才能编辑或添加密码。'); return; }
+                const isEdit = !!id;
+                const entry = isEdit ? entries.find(e => e.id === id) : null;
+
+                dom.editModalTitle.textContent = isEdit ? '编辑密码' : '新建密码';
+                editingId = isEdit ? id : null;
+
+                dom.fTitle.value = entry ? entry.title : '';
+                dom.fUsername.value = entry ? entry.username : '';
+                dom.fPassword.value = entry ? entry.password : '';
+                dom.fNote.value = entry ? entry.note : '';
+
+                dom.customFieldsContainer.innerHTML = '';
+                const fields = entry ? (entry.customFields || []) : [];
+                for (const cf of fields) {
+                    let displayValue = cf.value || '';
+                    if (cf.encrypted && cf.value && masterKey) {
+                        displayValue = await decryptFieldValue(masterKey, cf.value);
+                    }
+                    addCustomFieldRow(cf.key, displayValue, cf.encrypted || false);
+                }
+
+                dom.editModal.classList.add('active');
+                setTimeout(() => {
+                    dom.fTitle.focus();
+                    dom.fTitle.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 350);
+                haptic('light');
+            }
+
+            function closeEdit() {
+                dom.editModal.classList.remove('active');
+                dom.fTitle.value = '';
+                dom.fUsername.value = '';
+                dom.fPassword.value = '';
+                dom.fNote.value = '';
+                dom.customFieldsContainer.innerHTML = '';
+                editingId = null;
+            }
+
+            async function handleSave() {
+                const title = dom.fTitle.value.trim();
+                if (!title) {
+                    await showAlert('请输入标题', '标题是必填项，请填写后重试。');
+                    dom.fTitle.focus();
+                    return;
+                }
+                const username = dom.fUsername.value.trim();
+                const password = dom.fPassword.value;
+                const note = dom.fNote.value.trim();
+                const customFields = collectCustomFields();
+
+                if (editingId) {
+                    await updateEntry(editingId, title, username, password, note, customFields);
+                } else {
+                    await addEntry(title, username, password, note, customFields);
+                }
+                closeEdit();
+            }
+
+            // ================================================================
+            //  确认删除
+            // ================================================================
+            async function confirmDelete(id) {
+                const entry = entries.find(e => e.id === id);
+                if (!entry) return;
+                const ok = await showDangerConfirm(
+                    '确认删除',
+                    `确定要删除「${escapeHtml(entry.title)}」吗？<br />此操作不可恢复。`,
+                    '删除',
+                    '取消'
+                );
+                if (ok) {
+                    deleteEntry(id);
+                }
+            }
+
+            // ================================================================
+            //  键盘快捷键
+            // ================================================================
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (dom.editModal.classList.contains('active')) closeEdit();
+                    if (dom.modalOverlay.classList.contains('active')) dom.modalOverlay.classList.remove(
+                    'active');
+                    dom.longpressMenu.style.display = 'none';
+                }
+                if (e.ctrlKey && e.shiftKey && e.key === 'L') {
+                    e.preventDefault();
+                    if (isUnlocked) lock();
+                }
+            });
+
+            // ================================================================
+            //  ★★★ Service Worker 注册（带排查） ★★★
+            // ================================================================
+            function registerSW() {
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('./sw.js')
+                        .then(reg => {
+                            console.log('✅ Service Worker 注册成功:', reg);
+                            // 监听更新
+                            reg.addEventListener('updatefound', () => {
+                                const newWorker = reg.installing;
+                                newWorker.addEventListener('statechange', () => {
+                                    if (newWorker.state === 'activated') {
+                                        console.log('✅ SW 已激活');
+                                    }
+                                });
+                            });
+                        })
+                        .catch(err => {
+                            console.warn('⚠️ Service Worker 注册失败:', err);
+                        });
+                } else {
+                    console.warn('⚠️ 当前浏览器不支持 Service Worker');
+                }
+            }
+
+            // ================================================================
+            //  初始化
+            // ================================================================
+            function init() {
+                const hasSalt = loadSaltFromStore() !== null;
+                if (hasSalt) {
+                    dom.lockTitle.textContent = '请输入密码';
+                    dom.lockHint.textContent = '输入你之前设置的密码';
+                } else {
+                    dom.lockTitle.textContent = '首次使用，设置密码';
+                    dom.lockHint.textContent = '请牢记（至少 6 位数字）';
+                }
+                dom.lockScreen.style.display = 'flex';
+                dom.mainScreen.classList.remove('active');
+                dom.masterInput.focus();
+
+                dom.viewToggleBtn.addEventListener('click', () => {
+                    currentView = (currentView === 'card' ? 'table' : 'card');
+                    renderList();
+                });
+
+                dom.forgotBtn.addEventListener('click', async function(e) {
+                    e.stopPropagation();
+                    haptic('light');
+
+                    const hasSalt = loadSaltFromStore() !== null;
+                    const hasData = loadEncryptedFromStore() !== null;
+
+                    if (!hasSalt && !hasData) {
+                        await showAlert('无需重置', '当前没有存储任何数据，无需重置。<br />直接设置新主密码即可。');
+                        return;
+                    }
+
+                    const ok = await showDangerConfirm(
+                        '重置所有数据',
+                        '此操作将 <strong>永久删除</strong> 所有已保存的密码数据，包括所有条目和自定义字段。<br /><br />' +
+                        '重置后你可以重新设置主密码。<br /><span style="color:var(--red);">此操作不可恢复！</span>',
+                        '确认重置',
+                        '取消'
+                    );
+                    if (ok) {
+                        resetAllData();
+                    }
+                });
+
+                dom.unlockBtn.addEventListener('click', () => {
+                    const pwd = dom.masterInput.value;
+                    if (pwd.length < 6) {
+                        showAlert('密码太短', '主密码至少 6 位，请重新输入。');
+                        return;
+                    }
+                    unlock(pwd);
+                });
+                dom.masterInput.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') dom.unlockBtn.click();
+                });
+
+                dom.addBtn.addEventListener('click', () => {
+                    if (!isUnlocked) { showAlert('请先解锁', '请先解锁才能添加密码。'); return; }
+                    openEdit(null);
+                });
+
+                dom.lockBtn.addEventListener('click', () => {
+                    if (isUnlocked) lock();
+                });
+
+                dom.editModalClose.addEventListener('click', closeEdit);
+                dom.editCancelBtn.addEventListener('click', closeEdit);
+                dom.editModal.addEventListener('click', e => {
+                    if (e.target === dom.editModal) closeEdit();
+                });
+                dom.editSaveBtn.addEventListener('click', handleSave);
+                dom.fTitle.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') dom.fUsername.focus();
+                });
+                dom.fUsername.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') dom.fPassword.focus();
+                });
+                dom.fPassword.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') dom.fNote.focus();
+                });
+                dom.fNote.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        dom.editSaveBtn.click();
+                    }
+                });
+
+                dom.addCustomBtn.addEventListener('click', handleAddCustomField);
+
+                dom.searchInput.addEventListener('input', renderAll);
+
+                // ★★★ 注册 Service Worker ★★★
+                registerSW();
+
+                console.log('KeyBox · 部署版已加载 (SW 已注册)');
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', init);
+            } else {
+                init();
+            }
+
+            window.__KEYBOX = { lock, unlock, resetAllData };
+
+        })();
+    </script>
+
+</body>
+</html>
