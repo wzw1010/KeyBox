@@ -2,15 +2,15 @@
   "name": "KeyBox",
   "short_name": "KeyBox",
   "description": "本地加密密码管理器",
-  "start_url": "./index.html",
-  "scope": ".",
+  "start_url": "/KeyBox/index.html",
+  "scope": "/KeyBox/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-1024.png",
+      "src": "/KeyBox/icon-1024.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any maskable"

@@ -8,12 +8,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="KeyBox" />
     <meta name="theme-color" content="#000000" />
-    <link rel="apple-touch-icon" href="icon-1024.png" />
-    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="/KeyBox/icon-1024.png" />
+    <link rel="manifest" href="/KeyBox/manifest.json" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <style>
         /* ================================================================
-           KeyBox · 品牌色统一版 · 锁屏图标已替换
+           KeyBox · 品牌色统一版
+           背景色：苹果原生深色/浅色
+           锁屏：纯数字键盘 · 无阴影图标
+           品牌色统一：#1A3A5C
+           交互：点击卡片折叠/展开
            ================================================================ */
 
         :root {
@@ -150,13 +154,12 @@
         .lock-icon-wrapper .lock-icon {
             width: 40px; height: 40px; opacity: .85; color: var(--text-secondary);
         }
-        /* ★★★ 已替换为用户提供的 SVG 图标 ★★★ */
         .lock-icon-wrapper .lock-icon svg {
             width: 100%;
             height: 100%;
             fill: none;
             stroke: currentColor;
-            stroke-width: 1.5;
+            stroke-width: 1.8;
             stroke-linecap: round;
             stroke-linejoin: round;
         }
@@ -1549,7 +1552,7 @@
             // ================================================================
             function registerSW() {
                 if ('serviceWorker' in navigator) {
-                    navigator.serviceWorker.register('./sw.js')
+                    navigator.serviceWorker.register('/keybox/sw.js')
                         .then(reg => { console.log('✅ Service Worker 注册成功:', reg); })
                         .catch(err => { console.warn('⚠️ Service Worker 注册失败:', err); });
                 }

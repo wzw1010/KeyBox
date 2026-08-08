@@ -1,10 +1,10 @@
 // KeyBox Service Worker
 const CACHE_NAME = 'keybox-v1';
 const ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-1024.png'
+  '/KeyBox/',
+  '/KeyBox/index.html',
+  '/KeyBox/manifest.json',
+  '/KeyBox/icon-1024.png'
 ];
 
 self.addEventListener('install', event => {
