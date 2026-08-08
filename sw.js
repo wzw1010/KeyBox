@@ -7,7 +7,6 @@ const ASSETS = [
   './icon-1024.png'
 ];
 
-// 安装时预缓存
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache => {
@@ -18,7 +17,6 @@ self.addEventListener('install', event => {
   );
 });
 
-// 激活时清理旧缓存
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
@@ -31,17 +29,13 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 拦截请求，优先缓存
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request).then(response => {
       if (response) {
-        // 命中缓存，返回缓存内容
         return response;
       }
-      // 否则发起网络请求
       return fetch(event.request).then(networkResponse => {
-        // 只缓存成功且同源的资源
         if (networkResponse && networkResponse.status === 200 && event.request.url.startsWith(self.location.origin)) {
           const clone = networkResponse.clone();
           caches.open(CACHE_NAME).then(cache => {
@@ -50,8 +44,7 @@ self.addEventListener('fetch', event => {
         }
         return networkResponse;
       }).catch(() => {
-        // 网络失败，返回离线提示（可自定义）
-        return new Response('您目前处于离线状态，请检查网络连接。', {
+        return new Response('离线状态，部分功能可能受限。', {
           status: 503,
           statusText: 'Service Unavailable'
         });
